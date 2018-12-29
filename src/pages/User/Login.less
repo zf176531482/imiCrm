@@ -1,0 +1,113 @@
+@import '~antd/lib/style/themes/default.less';
+
+.main {
+  width: 368px;
+  // margin: 0 auto;
+  @media screen and (max-width: @screen-sm) {
+    width: 95%;
+  }
+
+  .icon {
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2);
+    margin-left: 16px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: @primary-color;
+    }
+  }
+
+  .other {
+    text-align: left;
+    margin-top: 24px;
+    line-height: 22px;
+
+    .register {
+      float: right;
+    }
+  }
+}
+
+
+.container{
+  width: 100%;
+  // min-height: 100vh;
+  background: #BCBFC2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  height: 600px;
+  background: #BCBFC2;
+  background-image:url(../../assets/login-bg.png);
+  background-repeat:no-repeat;
+  background-size: auto 100%;
+}
+
+.loginBox {
+  
+  padding: 25px;
+  width: 400px;
+  max-width: calc(~"100vw");
+  min-height: 300px;
+  position: absolute;
+  right: 30%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
+.logo {
+  width: 60%;
+  position: relative;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  margin-bottom: 20px;
+  img {
+      width: 100%;
+  }
+}
+
+.inputType {
+  font-size: 16px;
+}
+
+.loginBtn {
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  line-height: 16px;
+  border-radius: 3px;
+}
+
+:global {
+  .ant-input:not(:first-child) {
+      padding-left: 36px !important;
+      padding-bottom: 7px !important;
+      height: 40px;
+      border-radius: 3px;
+      font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .loginBox {
+      right: 50%;
+      top: 50%;
+      transform: translate(50%, -50%);
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .bg {
+      background-image: none;
+  }
+}
