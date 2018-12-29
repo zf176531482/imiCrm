@@ -30,15 +30,15 @@ const plugins = [
           importWorkboxFrom: 'local',
         },
       },
-      ...(!process.env.TEST && os.platform() === 'darwin' ?
-        {
-          dll: {
-            include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
-            exclude: ['@babel/runtime'],
-          },
-          hardSource: true,
-        } :
-        {}),
+      ...(!process.env.TEST && os.platform() === 'darwin'
+        ? {
+            dll: {
+              include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
+              exclude: ['@babel/runtime'],
+            },
+            hardSource: true,
+          }
+        : {}),
     },
   ],
 ];
@@ -58,9 +58,7 @@ export default {
   // add for transfer to umi
   plugins,
   history: 'hash',
-  extraBabelPlugins: [
-    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
-  ],
+  extraBabelPlugins: [['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }]],
   targets: {
     ie: 11,
   },
@@ -84,10 +82,10 @@ export default {
     //   pathRewrite: { '^/server': '' },
     // },
     '/api': {
-      "target": "http://valveexpertise.com/",
-      "changeOrigin": true,
-      "pathRewrite": { "^/api": "" }
-    }
+      target: 'http://valveexpertise.com/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
   },
   ignoreMomentLocale: true,
   lessLoaderOptions: {

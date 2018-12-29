@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Link from 'umi/link';
 import styles from './index.less';
 import PageLoading from '../PageLoading';
+
 import { getDefaultCollapsedSubMenus } from './SiderMenuUtils';
 
 const BaseMenu = React.lazy(() => import('./BaseMenu'));
@@ -42,7 +43,7 @@ export default class SiderMenu extends PureComponent {
     const moreThanOne = openKeys.filter(openKey => this.isMainMenu(openKey)).length > 1;
     this.setState({
       // openKeys: moreThanOne ? [openKeys.pop()] : [...openKeys],
-      openKeys: [...openKeys]
+      openKeys: [...openKeys],
     });
   };
 

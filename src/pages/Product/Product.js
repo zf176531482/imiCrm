@@ -283,7 +283,7 @@ class UpdateForm extends PureComponent {
   render() {
     const { updateModalVisible, handleUpdateModalVisible, values, form } = this.props;
     const { currentStep, formVals } = this.state;
-    
+
     return (
       <Modal
         // width={640}
@@ -358,25 +358,19 @@ class Product extends PureComponent {
       {
         name: 'Dept',
         data: [
-          {id: 1, name: 'Executive', checked: true},
-          {id: 2, name: 'Engineering', checked: false}
-        ]
+          { id: 1, name: 'Executive', checked: true },
+          { id: 2, name: 'Engineering', checked: false },
+        ],
       },
       {
         name: 'Job Title',
-        data: [
-          {id: 1, name: '22', checked: true},
-          {id: 2, name: '33', checked: true}
-        ]
+        data: [{ id: 1, name: '22', checked: true }, { id: 2, name: '33', checked: true }],
       },
       {
         name: 'Location',
-        data: [
-          {id: 1, name: '44', checked: false},
-          {id: 2, name: '55', checked: false}
-        ]
-      }
-    ]
+        data: [{ id: 1, name: '44', checked: false }, { id: 2, name: '55', checked: false }],
+      },
+    ],
   };
 
   columns = [
@@ -418,23 +412,27 @@ class Product extends PureComponent {
         <Fragment>
           <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a>
           <Divider type="vertical" />
-          <a onClick={() =>{
-            Modal.confirm({
-              title: 'Do you want to delete these items?',
-              content: 'When clicked the OK button, this dialog will be closed after 1 second',
-              onOk() {
-                return new Promise((resolve, reject) => {
-                  setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-                }).catch(() => console.log('Oops errors!'));
-              },
-              onCancel() {},
-            });
-          }}>Delete</a>
+          <a
+            onClick={() => {
+              Modal.confirm({
+                title: 'Do you want to delete these items?',
+                content: 'When clicked the OK button, this dialog will be closed after 1 second',
+                onOk() {
+                  return new Promise((resolve, reject) => {
+                    setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+                  }).catch(() => console.log('Oops errors!'));
+                },
+                onCancel() {},
+              });
+            }}
+          >
+            Delete
+          </a>
         </Fragment>
       ),
     },
   ];
-  
+
   componentDidMount() {
     console.log(this.props);
     const { dispatch } = this.props;
@@ -576,34 +574,40 @@ class Product extends PureComponent {
     this.handleUpdateModalVisible();
   };
 
-
-  checkChange = (index, list)=> {
+  checkChange = (index, list) => {
     let { filterOptions } = this.state;
     filterOptions[index].data = list;
-    this.setState({ filterOptions: filterOptions }, ()=> {
+    this.setState({ filterOptions: filterOptions }, () => {
       console.log(this.state.filterOptions);
-    })
-  }
+    });
+  };
 
   renderFilter = () => {
     let selects = [];
-    this.state.filterOptions.map((item, index)=>{
+    this.state.filterOptions.map((item, index) => {
       selects.push(
-        <SelectCheckbox key={index} data={item.data} title={item.name} onChange={(list)=>{this.checkChange(index, list)}}></SelectCheckbox>
-      )
-    })
+        <SelectCheckbox
+          key={index}
+          data={item.data}
+          title={item.name}
+          onChange={list => {
+            this.checkChange(index, list);
+          }}
+        />
+      );
+    });
     return selects;
-  }
+  };
 
   renderForm() {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+          <Col md={20} sm={24}>
             {this.renderFilter()}
           </Col>
-          <Col md={18} sm={24}>
-            <span className={styles.submitButtons} style={{float: 'right'}}>
+          <Col md={4} sm={24}>
+            <span className={styles.submitButtons} style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>
@@ -614,10 +618,8 @@ class Product extends PureComponent {
           </Col>
         </Row>
       </Form>
-    )
+    );
   }
-
-
 
   render() {
     const {
@@ -643,14 +645,26 @@ class Product extends PureComponent {
     const content = (
       <Row type="flex" align="middle">
         <Col span={12}>
-          <h1 style={{margin: 0, fontSize: '26px'}}>Product & Asset Information</h1>
+          <h1 style={{ margin: 0, fontSize: '26px' }}>Product & Asset Information</h1>
         </Col>
-        <Col span={12} style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
-          <Button className={styles.topBtns} style={{marginLeft: '20px'}} type="primary" icon="printer">Print</Button>
-          <Button className={styles.topBtns} type="primary" icon="download">Export</Button>
+        <Col
+          span={12}
+          style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
+        >
+          <Button
+            className={styles.topBtns}
+            style={{ marginLeft: '20px' }}
+            type="primary"
+            icon="printer"
+          >
+            Print
+          </Button>
+          <Button className={styles.topBtns} type="primary" icon="download">
+            Export
+          </Button>
         </Col>
       </Row>
-    )
+    );
     return (
       <PageHeaderWrapper content={content}>
         <Card bordered={false}>

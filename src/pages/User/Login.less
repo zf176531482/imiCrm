@@ -31,11 +31,10 @@
   }
 }
 
-
-.container{
+.container {
   width: 100%;
   // min-height: 100vh;
-  background: #BCBFC2;
+  background: #bcbfc2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,17 +45,16 @@
   width: 100%;
   max-width: 1400px;
   height: 600px;
-  background: #BCBFC2;
-  background-image:url(../../assets/login-bg.png);
-  background-repeat:no-repeat;
+  background: #bcbfc2;
+  background-image: url(../../assets/login-bg.png);
+  background-repeat: no-repeat;
   background-size: auto 100%;
 }
 
 .loginBox {
-  
   padding: 25px;
   width: 400px;
-  max-width: calc(~"100vw");
+  max-width: calc(~'100vw');
   min-height: 300px;
   position: absolute;
   right: 30%;
@@ -72,7 +70,7 @@
   transform: translate(-50%, 0);
   margin-bottom: 20px;
   img {
-      width: 100%;
+    width: 100%;
   }
 }
 
@@ -90,24 +88,24 @@
 
 :global {
   .ant-input:not(:first-child) {
-      padding-left: 36px !important;
-      padding-bottom: 7px !important;
-      height: 40px;
-      border-radius: 3px;
-      font-size: 14px;
+    padding-left: 36px !important;
+    padding-bottom: 7px !important;
+    height: 40px;
+    border-radius: 3px;
+    font-size: 14px;
   }
 }
 
 @media screen and (max-width: 850px) {
   .loginBox {
-      right: 50%;
-      top: 50%;
-      transform: translate(50%, -50%);
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
   }
 }
 
 @media screen and (max-width: 650px) {
   .bg {
-      background-image: none;
+    background-image: none;
   }
 }

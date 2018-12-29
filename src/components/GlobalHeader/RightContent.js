@@ -10,7 +10,6 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 import avatar from '../../assets/user.jpg';
 
-
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
     const { notices = [] } = this.props;

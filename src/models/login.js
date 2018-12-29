@@ -11,7 +11,7 @@ export default {
 
   state: {
     status: undefined,
-    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+    user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
   },
 
   effects: {
@@ -20,7 +20,6 @@ export default {
 
       // Login successfully
       if (response.status === 'OK') {
-
         //管理员预制权限
         response.currentAuthority = 'admin';
         yield put({
@@ -46,7 +45,6 @@ export default {
         }
         yield put(routerRedux.replace(redirect || '/'));
       } else {
-
         //管理员预制权限
         response.currentAuthority = 'guest';
         yield put({
@@ -68,7 +66,7 @@ export default {
         payload: {
           status: false,
           currentAuthority: 'guest',
-          user: null
+          user: null,
         },
       });
       reloadAuthorized();
@@ -86,16 +84,16 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
-      if(payload.user) {
-        localStorage.setItem('user', JSON.stringify(payload.user))
+      if (payload.user) {
+        localStorage.setItem('user', JSON.stringify(payload.user));
       } else {
-        localStorage.removeItem('user')
+        localStorage.removeItem('user');
       }
-      
+
       return {
         ...state,
         status: payload.status,
-        user: payload.user
+        user: payload.user,
         // type: payload.type,
       };
     },

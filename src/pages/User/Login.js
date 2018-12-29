@@ -12,7 +12,6 @@ const { Tab, Email, UserName, Password, Mobile, Captcha, Submit } = Login;
   login,
   submitting: loading.effects['login/login'],
 }))
-
 class LoginPage extends Component {
   state = {
     type: 'account',
@@ -76,21 +75,23 @@ class LoginPage extends Component {
         <div className={styles.bg}>
           <div className={styles.loginBox}>
             <div className={styles.logo}>
-                <img src={require('../../assets/login_logo.png')} alt="" />
+              <img src={require('../../assets/login_logo.png')} alt="" />
             </div>
             <div className={styles.main}>
-            <Login
-              defaultActiveKey={type}
-              onTabChange={this.onTabChange}
-              onSubmit={this.handleSubmit}
-              ref={form => {
-                this.loginForm = form;
-              }}
-            >
-            {login.status === 'ERROR' &&
+              <Login
+                defaultActiveKey={type}
+                onTabChange={this.onTabChange}
+                onSubmit={this.handleSubmit}
+                ref={form => {
+                  this.loginForm = form;
+                }}
+              >
+                {login.status === 'ERROR' &&
                   !submitting &&
-                  this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
-            <Email
+                  this.renderMessage(
+                    formatMessage({ id: 'app.login.message-invalid-credentials' })
+                  )}
+                <Email
                   name="username"
                   placeholder={`${formatMessage({ id: 'app.login.username' })}`}
                   rules={[
@@ -111,7 +112,7 @@ class LoginPage extends Component {
                   ]}
                   onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
                 />
-              {/* <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}>
+                {/* <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}>
                 {login.status === 'error' &&
                   login.type === 'account' &&
                   !submitting &&
@@ -138,7 +139,7 @@ class LoginPage extends Component {
                   onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
                 />
               </Tab> */}
-              {/* <Tab key="mobile" tab={formatMessage({ id: 'app.login.tab-login-mobile' })}>
+                {/* <Tab key="mobile" tab={formatMessage({ id: 'app.login.tab-login-mobile' })}>
                 {login.status === 'error' &&
                   login.type === 'mobile' &&
                   !submitting &&
@@ -174,7 +175,7 @@ class LoginPage extends Component {
                   ]}
                 />
               </Tab> */}
-              {/* <div>
+                {/* <div>
                 <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
                   <FormattedMessage id="app.login.remember-me" />
                 </Checkbox>
@@ -182,10 +183,10 @@ class LoginPage extends Component {
                   <FormattedMessage id="app.login.forgot-password" />
                 </a>
               </div> */}
-              <Submit loading={submitting}>
-                <FormattedMessage id="app.login.login" />
-              </Submit>
-              {/* <div className={styles.other}>
+                <Submit loading={submitting}>
+                  <FormattedMessage id="app.login.login" />
+                </Submit>
+                {/* <div className={styles.other}>
                 <FormattedMessage id="app.login.sign-in-with" />
                 <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
                 <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
@@ -194,14 +195,11 @@ class LoginPage extends Component {
                   <FormattedMessage id="app.login.signup" />
                 </Link>
               </div> */}
-            </Login>
-          </div>
+              </Login>
+            </div>
           </div>
         </div>
       </div>
-
-
-
     );
   }
 }

@@ -42,7 +42,7 @@ const checkStatus = response => {
     return response;
   }
 
-  if(response.status == 400) {
+  if (response.status === 400) {
     return response;
   }
 

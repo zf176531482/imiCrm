@@ -118,7 +118,6 @@ export async function fakeAccountLogout() {
   return request('/api/usermgr/login_out/');
 }
 
-
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',

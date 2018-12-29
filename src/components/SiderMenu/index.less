@@ -2,16 +2,16 @@
 
 @nav-header-height: @layout-header-height;
 
-.menu::-webkit-scrollbar {/*滚动条整体样式*/
-  width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+.menu::-webkit-scrollbar {
+  width: 5px;
   height: 1px;
 }
-.menu::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-   -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+.menu::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   background: #535353;
 }
-.menu::-webkit-scrollbar-track {/*滚动条里面轨道*/
-  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+.menu::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   background: #ddd;
 }
 .logo {
@@ -29,7 +29,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-decoration:none
+    text-decoration: none;
   }
   img {
     display: block;
@@ -41,7 +41,7 @@
     // display: inline-block;
     // vertical-align: middle;
     font-size: 20px;
-    margin: 0px;
+    margin: 0;
     font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 500;
   }
@@ -82,8 +82,6 @@
   margin-right: 10px;
 }
 
-
-
 :global {
   .top-nav-menu li.ant-menu-item {
     height: @nav-header-height;
@@ -105,7 +103,7 @@
       }
     }
   }
-  
+
   .ant-menu-inline-collapsed {
     & > .ant-menu-item .sider-menu-item-img + span,
     &

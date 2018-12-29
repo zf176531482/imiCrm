@@ -3,75 +3,75 @@
 // }
 
 .container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
 }
 
 .row {
-    width: 100%;
-    padding: 20px;
+  width: 100%;
+  padding: 20px;
 }
 
 .col {
-    height: 240px;
-    background: #F7F9FA;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  height: 240px;
+  background: #f7f9fa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .icon {
-    color: #212A35;
-    font-size: 110px;
+  color: #212a35;
+  font-size: 110px;
 }
 
 .colContainer:hover {
-    cursor:pointer;
-    background: #0091D8;
-    .text {
-        color: #fff;
-    }
-    .icon {
-        color: #fff;
-    }
+  cursor: pointer;
+  background: #0091d8;
+  .text {
+    color: #fff;
+  }
+  .icon {
+    color: #fff;
+  }
 }
 
 .colContainer:after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-    top: 0px;
-    right: 0px;
-    z-index: 0;
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  top: 0;
+  right: 0;
+  z-index: 0;
 }
 
 .colContainer:last-child:after {
-    border-right: none;
+  border-right: none;
 }
 
 .text {
-    margin-top: 15px;
-    font-size: 22px;
-    color: #8B999F;
-    text-align: center;
-    line-height: 22px;
+  margin-top: 15px;
+  font-size: 22px;
+  color: #8b999f;
+  text-align: center;
+  line-height: 22px;
 }
 
 .assist {
-    width: 100%;
-    height: 64px;
-    line-height: 64px;
-    padding-left: 20px;
-    font-size: 22px;
-    color: #333333;
-    background: #fff;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.12);
+  width: 100%;
+  height: 64px;
+  line-height: 64px;
+  padding-left: 20px;
+  font-size: 22px;
+  color: #333;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12);
 }
