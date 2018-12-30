@@ -18,9 +18,7 @@ export default {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
 
-      // Login successfully
       if (response.status === 'OK') {
-        //管理员预制权限
         response.currentAuthority = 'admin';
         yield put({
           type: 'changeLoginStatus',
@@ -45,7 +43,6 @@ export default {
         }
         yield put(routerRedux.replace(redirect || '/'));
       } else {
-        //管理员预制权限
         response.currentAuthority = 'guest';
         yield put({
           type: 'changeLoginStatus',
@@ -60,7 +57,7 @@ export default {
 
     *logout(_, { call, put }) {
       yield call(fakeAccountLogout);
-      //不管成功与否都退出登录
+
       yield put({
         type: 'changeLoginStatus',
         payload: {

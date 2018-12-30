@@ -59,6 +59,7 @@ class Home extends Component {
           <Col
             xs={24}
             sm={12}
+            md={6}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
               this.handleClick('/product');
@@ -70,6 +71,7 @@ class Home extends Component {
           <Col
             xs={24}
             sm={12}
+            md={6}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
               this.handleClick('/upgrades');
@@ -81,6 +83,7 @@ class Home extends Component {
           <Col
             xs={24}
             sm={12}
+            md={6}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
               this.handleClick('/service');
@@ -92,6 +95,7 @@ class Home extends Component {
           <Col
             xs={24}
             sm={12}
+            md={6}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
               this.handleClick('/utilities');

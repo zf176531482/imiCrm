@@ -21,7 +21,7 @@ export default {
   'app.register-result.view-mailbox': 'View mailbox',
   'validation.email.required': 'Please enter your email!',
   'validation.email.wrong-format': 'The email address is in the wrong format!',
-  'validation.username.required': 'Please enter your userName!',
+  'validation.username.required': 'Please enter your email!',
   'validation.password.required': 'Please enter your password!',
   'validation.password.twice': 'The passwords entered twice do not match!',
   'validation.password.strength.msg':
