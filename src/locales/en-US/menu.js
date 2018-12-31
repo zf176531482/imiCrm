@@ -7,7 +7,7 @@ export default {
   'menu.Upgrades.Manual Search & Input.Manual Input': 'Manual Input',
   'menu.Home': 'Home',
   'menu.home': 'Home',
-  'menu.Contcts': 'Contcts',
+  'menu.Contacts': 'Contacts',
   'menu.Support': 'Support',
   'menu.Product': 'Product',
   'menu.Product & Asset Information': 'Product & Asset Information',

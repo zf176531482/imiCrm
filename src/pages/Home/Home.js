@@ -47,7 +47,7 @@ class Home extends Component {
             sm={12}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
-              this.handleClick('/contcts');
+              this.handleClick('/contacts');
             }}
           >
             <span className={`${styles.icon} icon-image2vector-6`} />

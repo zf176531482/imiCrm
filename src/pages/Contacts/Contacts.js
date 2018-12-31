@@ -28,7 +28,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
 
-import styles from './Contcts.less';
+import styles from './Contacts.less';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -347,7 +347,7 @@ class UpdateForm extends PureComponent {
   loading: loading.models.rule,
 }))
 @Form.create()
-class Contcts extends PureComponent {
+class Contacts extends PureComponent {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -645,7 +645,7 @@ class Contcts extends PureComponent {
     const content = (
       <Row type="flex" align="middle">
         <Col span={12}>
-          <h1 style={{ margin: 0, fontSize: '26px' }}>Contcts</h1>
+          <h1 style={{ margin: 0, fontSize: '26px' }}>Contacts</h1>
         </Col>
         <Col
           span={12}
@@ -722,4 +722,4 @@ class Contcts extends PureComponent {
   }
 }
 
-export default Contcts;
+export default Contacts;

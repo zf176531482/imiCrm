@@ -3,13 +3,6 @@
   padding: 24px;
 }
 
-// :global {
-//   .ant-card {
-//     display: flex;
-//     flex-direction: row;
-//   }
-// }
-
 .card {
   display: flex;
   flex-direction: row;
@@ -28,7 +21,15 @@
   margin: 2px 0 8px;
 }
 
+/* stylelint-disable */
 .detail {
-  height: 76px;
+  // height: 76px;
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  /* autoprefixer: off */
+  -webkit-box-orient: vertical;
+  /* autoprefixer: on */
 }
+/* stylelint-enable */

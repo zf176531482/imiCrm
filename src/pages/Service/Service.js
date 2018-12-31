@@ -1,23 +1,44 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Icon, Button, Modal, Badge, Divider, Drawer } from 'antd';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Icon,
+  Button,
+  Modal,
+  Badge,
+  Divider,
+  Drawer,
+  Input,
+  Select,
+  DatePicker,
+  Upload,
+  message,
+  Checkbox,
+} from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
+import DrawerForm from '@/components/DrawerForm';
+import DrawerDetail from '@/components/DrawerDetail';
 
-import styles from '../Contcts/Contcts.less';
+import styles from './Service.less';
+
+const { Option } = Select;
 
 const DRAWER_TYPE = {
-  DOCUMENT: 0,
-  MANUAL: 1,
-  SPARE: 2,
+  ADD_REPORT: 0,
+  VIEW_HISTORY: 1,
 };
 
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
     .join(',');
+
 /* eslint react/no-multi-comp:0 */
 @connect(({ rule, loading }) => ({
   rule,
@@ -26,11 +47,10 @@ const getValue = obj =>
 @Form.create()
 class Service extends PureComponent {
   state = {
-    visibleSpare: false,
-    visibleDocuments: false,
-    visibleManual: false,
+    visibleAdd: false,
+    visibleHistory: false,
     selectedRows: [],
-    selectDrawerRows: [],
+
     formValues: {},
     filterOptions: [
       {
@@ -80,7 +100,7 @@ class Service extends PureComponent {
       render: (text, record) => (
         <a
           onClick={() => {
-            this.showDrawer(DRAWER_TYPE.SPARE, record);
+            this.showDrawer(DRAWER_TYPE.ADD_REPORT, record);
           }}
         >
           <Icon type="plus" className={styles.iconType} />
@@ -95,7 +115,7 @@ class Service extends PureComponent {
         return (
           <a
             onClick={() => {
-              this.showDrawer(DRAWER_TYPE.SPARE, record);
+              this.showDrawer(DRAWER_TYPE.VIEW_HISTORY, record);
             }}
           >
             <Icon type="calendar" className={styles.iconType} />
@@ -106,7 +126,7 @@ class Service extends PureComponent {
   ];
 
   componentDidMount() {
-    console.log(this.props);
+    // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
       type: 'rule/fetch',
@@ -115,14 +135,11 @@ class Service extends PureComponent {
 
   showDrawer = (type, data) => {
     switch (type) {
-      case DRAWER_TYPE.DOCUMENT:
-        this.setState({ visibleDocuments: true });
+      case DRAWER_TYPE.ADD_REPORT:
+        this.setState({ visibleAdd: true });
         break;
-      case DRAWER_TYPE.SPARE:
-        this.setState({ visibleSpare: true });
-        break;
-      case DRAWER_TYPE.MANUAL:
-        this.setState({ visibleManual: true });
+      case DRAWER_TYPE.VIEW_HISTORY:
+        this.setState({ visibleHistory: true });
         break;
       default:
         break;
@@ -131,8 +148,8 @@ class Service extends PureComponent {
 
   onClose = () => {
     this.setState({
-      visibleSpare: false,
-      visibleDocuments: false,
+      visibleAdd: false,
+      visibleHistory: false,
     });
   };
 
@@ -250,105 +267,8 @@ class Service extends PureComponent {
     );
   }
 
-  renderDocuments = () => {
-    let data = [];
-    for (let i = 0; i < 10; i++) {
-      data.push(
-        <Row key={i} type="flex" justify="start" align="middle" style={{ marginBottom: '24px' }}>
-          <Col span={14}>
-            <a href="https://www.baidu.com" target="_blank">
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <img
-                  style={{ height: '46px' }}
-                  src={require('../../assets/ic_documents_pdf.png')}
-                  alt=""
-                />
-                <div style={{ marginLeft: '10px' }}>
-                  <div style={{ fontSize: '15px', color: '#000' }}>MDRB_Y14649CZ-01</div>
-                  <div style={{ fontSize: '12px', color: '#8B999F', marginTop: '2px' }}>
-                    ADOBE ACROBAT DOCUMENT
-                  </div>
-                </div>
-              </div>
-            </a>
-          </Col>
-          <Col span={8} style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '12px', color: '#8B999F' }}>59.8MB</span>
-          </Col>
-          <Col span={2} style={{ textAlign: 'right' }}>
-            <a
-              href="#"
-              onClick={() => {
-                window.location.href = 'https://www.baidu.com';
-              }}
-            >
-              <Icon style={{ fontSize: '24px' }} type="download" />
-            </a>
-          </Col>
-        </Row>
-      );
-    }
-    return data;
-  };
-
-  renderSpare = () => {
-    let data = {
-      list: [
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 1,
-          key: 1,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 2,
-          key: 2,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 3,
-          key: 3,
-        },
-      ],
-    };
-
-    let columns = [
-      {
-        title: 'Part Number',
-        dataIndex: 'partNumber',
-      },
-      {
-        title: 'Part Name',
-        dataIndex: 'partName',
-      },
-      {
-        title: 'Qty',
-        dataIndex: 'qty',
-      },
-    ];
-
-    let { selectDrawerRows } = this.state;
-    return (
-      <div>
-        <StandardTable
-          selectedRows={selectDrawerRows}
-          // loading={loading}
-          data={data}
-          columns={columns}
-          hasPagination={false}
-          onSelectRow={rows => {
-            this.setState({ selectDrawerRows: rows });
-          }}
-          // onChange={this.handleStandardTableChange}
-        />
-        <Button type="danger" block style={{ marginTop: '24px' }}>
-          <Icon type="delete" /> Delete
-        </Button>
-      </div>
-    );
+  renderHistory = () => {
+    return <div>1111</div>;
   };
 
   render() {
@@ -356,29 +276,13 @@ class Service extends PureComponent {
       rule: { data },
       loading,
     } = this.props;
-    const { selectedRows, visibleSpare, visibleDocuments } = this.state;
+    const { selectedRows, visibleAdd, visibleHistory } = this.state;
 
     const content = (
       <Row type="flex" align="middle">
-        <Col span={12}>
+        <Col span={24}>
           <h1 style={{ margin: 0, fontSize: '26px' }}>Service Report</h1>
         </Col>
-        {/* <Col
-          span={12}
-          style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
-        >
-          <Button
-            className={styles.topBtns}
-            style={{ marginLeft: '20px' }}
-            type="primary"
-            icon="printer"
-          >
-            Print
-          </Button>
-          <Button className={styles.topBtns} type="primary" icon="download">
-            Export
-          </Button>
-        </Col> */}
       </Row>
     );
     return (
@@ -396,26 +300,8 @@ class Service extends PureComponent {
             />
           </div>
         </Card>
-        <Drawer
-          width={500}
-          title="Project Documents"
-          placement="right"
-          closable={true}
-          onClose={this.onClose}
-          visible={visibleDocuments}
-        >
-          {this.renderDocuments()}
-        </Drawer>
-        <Drawer
-          width={500}
-          title="Spare Parts Recommendation"
-          placement="right"
-          closable={true}
-          onClose={this.onClose}
-          visible={visibleSpare}
-        >
-          {this.renderSpare()}
-        </Drawer>
+        <DrawerForm visible={visibleAdd} onClose={this.onClose} />
+        <DrawerDetail visible={visibleHistory} onClose={this.onClose} />
       </PageHeaderWrapper>
     );
   }

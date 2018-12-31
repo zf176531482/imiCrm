@@ -34,10 +34,10 @@ export default [
       //   authority: ['admin'],//配置准入权限,可以配置多个角色
       // },
       {
-        name: 'Contcts', //菜单名字
+        name: 'Contacts', //菜单名字
         icon: 'icon-user-copy', //图标
-        path: '/contcts', //文件夹
-        component: './Contcts/Contcts',
+        path: '/contacts', //文件夹
+        component: './Contacts/Contacts',
         authority: ['admin'], //配置准入权限,可以配置多个角色
       },
       {

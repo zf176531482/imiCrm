@@ -28,7 +28,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
 
-import styles from '../Contcts/Contcts.less';
+import styles from '../Contacts/Contacts.less';
 
 const FormItem = Form.Item;
 const { Step } = Steps;

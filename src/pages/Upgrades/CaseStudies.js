@@ -27,15 +27,20 @@ class CaseStudies extends PureComponent {
           }
         >
           <div className={styles.title}>Ulsan TPP</div>
-          <div className={styles.date}>5 Jan 2018 </div>
-          <div className={styles.detail}>
-            IMI CCI solves recurring maintenance issues at South American petrochemical plant. IMI
+          <div className={styles.date}>5 Jan 2018</div>
+          <div className={styles.detail} style={{ boxOrient: 'vertical' }}>
+            {`IMI CCI solves recurring maintenance issues at South American petrochemical plant. IMI
             CCI solves recurring maintenance issues at South American petrochemical plant. IMI CCI
             solves recurring maintenance issues at South American petrochemical plant IMI CCI solves
             recurring maintenance issues at South American petrochemical plant. IMI CCI solves
             recurring maintenance issues at South American petrochemical plant. IMI CCI solves
             recurring maintenance issues at South American petrochemical plant IMI CCI solves
-            recurring maintenance issues at South American petrochemical plant
+            recurring maintenance issues at South American petrochemical plant recurring maintenance
+            issues at South American petrochemical plant recurring maintenance issues at South
+            American petrochemical plant recurring maintenance issues at South American
+            petrochemical plant recurring maintenance issues at South American petrochemical plant
+            recurring maintenance issues at South American petrochemical plant recurring maintenance
+            issues at South American petrochemical plant`}
           </div>
           {/* <LinesEllipsis
           className={styles.detail}

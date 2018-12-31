@@ -1,17 +1,18 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Icon, Button, Modal, Badge, Divider, Drawer } from 'antd';
+import { Row, Col, Card, Form, Icon, Button, Modal, Badge, Divider, Drawer, Table } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
 
-import styles from '../Contcts/Contcts.less';
+import styles from '../Contacts/Contacts.less';
 
 const DRAWER_TYPE = {
   DOCUMENT: 0,
   MANUAL: 1,
   SPARE: 2,
+  HISTORY: 3,
 };
 
 const getValue = obj =>
@@ -29,8 +30,10 @@ class Product extends PureComponent {
     visibleSpare: false,
     visibleDocuments: false,
     visibleManual: false,
+    visibleHistory: false,
     selectedRows: [],
     selectDrawerRows: [],
+    selectHistoryRows: [],
     formValues: {},
     filterOptions: [
       {
@@ -114,28 +117,17 @@ class Product extends PureComponent {
     },
     {
       title: 'Order status & history',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={() => {}}>Edit</a>
-          <Divider type="vertical" />
+      render: (text, record) => {
+        return (
           <a
             onClick={() => {
-              Modal.confirm({
-                title: 'Do you want to delete these items?',
-                content: 'When clicked the OK button, this dialog will be closed after 1 second',
-                onOk() {
-                  return new Promise((resolve, reject) => {
-                    setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-                  }).catch(() => console.log('Oops errors!'));
-                },
-                onCancel() {},
-              });
+              this.showDrawer(DRAWER_TYPE.HISTORY, record);
             }}
           >
-            Delete
+            <Icon type="bars" className={styles.iconType} />
           </a>
-        </Fragment>
-      ),
+        );
+      },
     },
   ];
 
@@ -158,6 +150,9 @@ class Product extends PureComponent {
       case DRAWER_TYPE.MANUAL:
         this.setState({ visibleManual: true });
         break;
+      case DRAWER_TYPE.HISTORY:
+        this.setState({ visibleHistory: true });
+        break;
       default:
         break;
     }
@@ -167,6 +162,7 @@ class Product extends PureComponent {
     this.setState({
       visibleSpare: false,
       visibleDocuments: false,
+      visibleHistory: false,
     });
   };
 
@@ -385,12 +381,94 @@ class Product extends PureComponent {
     );
   };
 
+  renderHistory = () => {
+    const expandedRowRender = () => {
+      const columns = [
+        { title: '', dataIndex: 'padding' },
+        { title: 'Part Number', dataIndex: 'partNumber' },
+        { title: 'Part Name', dataIndex: 'partName' },
+        { title: 'Qty', dataIndex: 'qty' },
+      ];
+
+      const data = [];
+      for (let i = 0; i < 3; ++i) {
+        data.push({
+          partNumber: '1094398428',
+          partName: 'Cage',
+          qty: 1,
+          key: i,
+          padding: '',
+        });
+      }
+      return <Table columns={columns} dataSource={data} pagination={false} />;
+    };
+
+    let data = {
+      list: [
+        {
+          orderNumber: '1094398428',
+          orderStatus: 'prodution',
+          dispatchDate: '20/02/2029',
+          key: 1,
+        },
+        {
+          orderNumber: '1094398428',
+          orderStatus: 'prodution',
+          dispatchDate: '20/02/2029',
+          key: 2,
+        },
+        {
+          orderNumber: '1094398428',
+          orderStatus: 'prodution',
+          dispatchDate: '20/02/2029',
+          key: 3,
+        },
+      ],
+    };
+
+    let columns = [
+      {
+        title: 'Order Number',
+        dataIndex: 'orderNumber',
+      },
+      {
+        title: 'Order Status',
+        dataIndex: 'orderStatus',
+      },
+      {
+        title: 'Dispatch Date',
+        dataIndex: 'dispatchDate',
+      },
+    ];
+
+    let { selectHistoryRows } = this.state;
+    return (
+      <div>
+        <StandardTable
+          selectedRows={selectHistoryRows}
+          // loading={loading}
+          data={data}
+          columns={columns}
+          hasPagination={false}
+          onSelectRow={rows => {
+            this.setState({ selectHistoryRows: rows });
+          }}
+          // onChange={this.handleStandardTableChange}
+          expandedRowRender={expandedRowRender}
+        />
+        <Button type="danger" block style={{ marginTop: '24px' }}>
+          <Icon type="delete" /> Delete
+        </Button>
+      </div>
+    );
+  };
+
   render() {
     const {
       rule: { data },
       loading,
     } = this.props;
-    const { selectedRows, visibleSpare, visibleDocuments } = this.state;
+    const { selectedRows, visibleSpare, visibleDocuments, visibleHistory } = this.state;
 
     const content = (
       <Row type="flex" align="middle">
@@ -449,6 +527,16 @@ class Product extends PureComponent {
           visible={visibleSpare}
         >
           {this.renderSpare()}
+        </Drawer>
+        <Drawer
+          width={700}
+          title="Order status & history"
+          placement="right"
+          closable={true}
+          onClose={this.onClose}
+          visible={visibleHistory}
+        >
+          {this.renderHistory()}
         </Drawer>
       </PageHeaderWrapper>
     );
