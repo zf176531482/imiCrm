@@ -16,7 +16,7 @@ class ManualInput extends PureComponent {
 
     return (
       <PageHeaderWrapper content={content}>
-        <div>表单项</div>
+        <div>表单</div>
       </PageHeaderWrapper>
     );
   }
