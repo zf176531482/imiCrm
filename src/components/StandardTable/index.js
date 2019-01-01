@@ -47,6 +47,8 @@ class StandardTable extends PureComponent {
       onSelectRow(selectedRows);
     }
 
+    console.log(selectedRowKeys);
+
     this.setState({ selectedRowKeys, needTotalList });
   };
 

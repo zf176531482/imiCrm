@@ -55,7 +55,7 @@ class DetailDrawer extends React.Component {
           height: 'calc(100% - 108px)',
           paddingBottom: '108px',
         }}
-        title="Add Report"
+        title="View History"
         width={650}
         onClose={this.onClose}
         visible={visible}

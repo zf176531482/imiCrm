@@ -267,10 +267,6 @@ class Service extends PureComponent {
     );
   }
 
-  renderHistory = () => {
-    return <div>1111</div>;
-  };
-
   render() {
     const {
       rule: { data },
