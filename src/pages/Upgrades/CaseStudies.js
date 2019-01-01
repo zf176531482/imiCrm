@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { Row, Col, Card, Icon, Avatar } from 'antd';
-import LinesEllipsis from 'react-lines-ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CaseStudies.less';
 
@@ -42,14 +41,6 @@ class CaseStudies extends PureComponent {
             recurring maintenance issues at South American petrochemical plant recurring maintenance
             issues at South American petrochemical plant`}
           </div>
-          {/* <LinesEllipsis
-          className={styles.detail}
-          text={``}
-          maxLine='3'
-          ellipsis='...'
-          trimRight
-          basedOn='letters'
-        /> */}
         </Card>
       );
     return data;

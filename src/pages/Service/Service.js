@@ -90,12 +90,10 @@ class Service extends PureComponent {
     },
     {
       title: 'Plant Type',
-      className: 'td-center',
       dataIndex: 'status',
     },
     {
       title: 'Add Report',
-      className: 'td-center',
       dataIndex: 'updatedAt',
       render: (text, record) => (
         <a
@@ -109,7 +107,6 @@ class Service extends PureComponent {
     },
     {
       title: 'View History',
-      className: 'td-center',
       dataIndex: 'owner',
       render: (text, record) => {
         return (

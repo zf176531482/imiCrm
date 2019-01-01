@@ -36,10 +36,7 @@ class Home extends Component {
               this.handleClick('/support');
             }}
           >
-            <span className={`${styles.icon} icon-image2vector-1`}>
-              <span className={'path1'} />
-              <span className={'path2'} />
-            </span>
+            <span className={`${styles.icon} icon-image2vector-3`} />
             <div className={styles.text}>Support</div>
           </Col>
           <Col
@@ -50,7 +47,7 @@ class Home extends Component {
               this.handleClick('/contacts');
             }}
           >
-            <span className={`${styles.icon} icon-image2vector-6`} />
+            <span className={`${styles.icon} icon-image2vector`} />
             <div className={styles.text}>Contcts</div>
           </Col>
         </Row>
@@ -65,7 +62,7 @@ class Home extends Component {
               this.handleClick('/product');
             }}
           >
-            <span className={`${styles.icon} icon-image2vector-3`} />
+            <span className={`${styles.icon} icon-image2vector-1`} />
             <div className={styles.text}>Product & Asset Info</div>
           </Col>
           <Col
@@ -101,7 +98,7 @@ class Home extends Component {
               this.handleClick('/utilities');
             }}
           >
-            <span className={`${styles.icon} icon-image2vector-5`} />
+            <span className={`${styles.icon} icon-image2vector-6`} />
             <div className={styles.text}>Utilities</div>
           </Col>
         </Row>

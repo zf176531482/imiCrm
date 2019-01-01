@@ -73,7 +73,6 @@ class Product extends PureComponent {
     },
     {
       title: 'Project Documents',
-      className: 'td-center',
       dataIndex: 'status',
       render: (text, record) => (
         <a
@@ -87,7 +86,6 @@ class Product extends PureComponent {
     },
     {
       title: 'Product Manual',
-      className: 'td-center',
       dataIndex: 'updatedAt',
       render: (text, record) => (
         <a
@@ -101,7 +99,6 @@ class Product extends PureComponent {
     },
     {
       title: 'Spare Parts Recommendation',
-      className: 'td-center',
       dataIndex: 'owner',
       render: (text, record) => {
         return (

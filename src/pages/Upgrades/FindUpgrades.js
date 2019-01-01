@@ -1,10 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Button } from 'antd';
+import { Row, Col, Card, Form, Button, Divider, Modal } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
+import DrawerUpgrades from '@/components/DrawerUpgrades';
 
 import styles from '../Service/Service.less';
 
@@ -20,8 +21,8 @@ const getValue = obj =>
 @Form.create()
 class FindUpgrades extends PureComponent {
   state = {
-    visibleAdd: false,
-    visibleHistory: false,
+    visibleEdit: false,
+    selectedItem: {},
     selectedRows: [],
     formValues: {},
     filterOptions: [
@@ -53,7 +54,7 @@ class FindUpgrades extends PureComponent {
       dataIndex: 'desc',
     },
     {
-      title: 'Product Type',
+      title: 'Plant Type',
       dataIndex: 'callNo',
       // sorter: true,
       render: val => `${val} 万`,
@@ -62,18 +63,27 @@ class FindUpgrades extends PureComponent {
     },
     {
       title: 'Product Type',
-      className: 'td-center',
       dataIndex: 'status',
     },
     {
       title: 'Maker',
-      className: 'td-center',
       dataIndex: 'updatedAt',
     },
     {
       title: 'Upgrade Type ',
-      className: 'td-center',
       dataIndex: 'owner',
+    },
+    {
+      title: 'Operation',
+      render: (text, record) => (
+        <a
+          onClick={() => {
+            this.setState({ visibleEdit: true, selectedItem: record });
+          }}
+        >
+          Edit
+        </a>
+      ),
     },
   ];
 
@@ -153,6 +163,10 @@ class FindUpgrades extends PureComponent {
     });
   };
 
+  onClose = () => {
+    this.setState({ visibleEdit: false });
+  };
+
   checkChange = (index, list) => {
     let { filterOptions } = this.state;
     filterOptions[index].data = list;
@@ -205,7 +219,7 @@ class FindUpgrades extends PureComponent {
       rule: { data },
       loading,
     } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, visibleEdit, selectedItem } = this.state;
 
     const content = (
       <Row type="flex" align="middle">
@@ -229,6 +243,7 @@ class FindUpgrades extends PureComponent {
             />
           </div>
         </Card>
+        <DrawerUpgrades data={selectedItem} visible={visibleEdit} onClose={this.onClose} />
       </PageHeaderWrapper>
     );
   }
