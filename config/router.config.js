@@ -42,7 +42,7 @@ export default [
       },
       {
         name: 'Product & Asset Information', //菜单名字
-        icon: 'icon-assect-copy', //图标
+        icon: 'icon-imagevector-copy', //图标
         path: '/product', //文件夹
         component: './Product/Product', //文件名称
         authority: ['admin'], //配置准入权限,可以配置多个角色
@@ -68,30 +68,35 @@ export default [
             component: './Upgrades/MyUpgrades',
           },
           {
+            path: '/upgrades/manual',
+            name: 'Manual Search',
+            component: './Upgrades/ManualSearch',
+          },
+          {
             path: '/upgrades/case',
             name: 'Case Studies',
             component: './Upgrades/CaseStudies',
           },
-          {
-            path: '/upgrades/manual',
-            name: 'Manual Search & Input',
-            routes: [
-              {
-                path: '/upgrades/manual',
-                redirect: '/upgrades/manual/search',
-              },
-              {
-                path: '/upgrades/manual/search',
-                name: 'Manual Search',
-                component: './Upgrades/ManualSearch',
-              },
-              {
-                path: '/upgrades/manual/input',
-                name: 'Manual Input',
-                component: './Upgrades/ManualInput',
-              },
-            ],
-          },
+          // {
+          //   path: '/upgrades/manual',
+          //   name: 'Manual Search & Input',
+          //   routes: [
+          //     {
+          //       path: '/upgrades/manual',
+          //       redirect: '/upgrades/manual/search',
+          //     },
+          //     {
+          //       path: '/upgrades/manual/search',
+          //       name: 'Manual Search',
+          //       component: './Upgrades/ManualSearch',
+          //     },
+          //     {
+          //       path: '/upgrades/manual/input',
+          //       name: 'Manual Input',
+          //       component: './Upgrades/ManualInput',
+          //     },
+          //   ],
+          // },
         ],
       },
       {

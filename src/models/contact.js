@@ -1,7 +1,7 @@
-import { queryRule, removeRule, addRule, updateRule } from '@/services/api';
+import { queryContact, removeContact, addContact, updateContact } from '@/services/api';
 
 export default {
-  namespace: 'rule',
+  namespace: 'contact',
 
   state: {
     data: {
@@ -12,14 +12,24 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-      const response = yield call(queryRule, payload);
+      const response = yield call(queryContact, payload);
+      // console.log(response);
+      let res = {
+        list: response.objects,
+        pagination: {
+          total: response.meta.total_count,
+          pageSize: response.meta.limit,
+          current:
+            parseInt((response.meta.offset + response.meta.limit) / response.meta.limit, 10) || 1,
+        },
+      };
       yield put({
         type: 'save',
-        payload: response,
+        payload: res,
       });
     },
     *add({ payload, callback }, { call, put }) {
-      const response = yield call(addRule, payload);
+      const response = yield call(addContact, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -27,7 +37,7 @@ export default {
       if (callback) callback();
     },
     *remove({ payload, callback }, { call, put }) {
-      const response = yield call(removeRule, payload);
+      const response = yield call(removeContact, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -35,7 +45,7 @@ export default {
       if (callback) callback();
     },
     *update({ payload, callback }, { call, put }) {
-      const response = yield call(updateRule, payload);
+      const response = yield call(updateContact, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -46,7 +56,7 @@ export default {
 
   reducers: {
     save(state, action) {
-      console.log(action.payload);
+      // console.log(action.payload);
       return {
         ...state,
         data: action.payload,

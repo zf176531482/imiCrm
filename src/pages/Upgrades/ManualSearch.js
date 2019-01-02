@@ -225,11 +225,6 @@ class ManualSearch extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <div style={{ marginTop: '-10px', marginBottom: '15px' }}>
-              <Button icon="plus" type="primary" onClick={() => {}}>
-                Input
-              </Button>
-            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}

@@ -70,6 +70,11 @@ class UpgradesDrawer extends React.Component {
   };
 
   onClose = () => {
+    this.setState({
+      marker: '',
+      problem: '',
+      solution: '',
+    });
     this.props.onClose();
   };
 

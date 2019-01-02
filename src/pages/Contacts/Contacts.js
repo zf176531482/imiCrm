@@ -342,9 +342,9 @@ class UpdateForm extends PureComponent {
 }
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ contact, loading }) => ({
+  contact,
+  loading: loading.models.contact,
 }))
 @Form.create()
 class Contacts extends PureComponent {
@@ -376,59 +376,65 @@ class Contacts extends PureComponent {
   columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: 'first_name',
+      render: (text, record) => `${record.first_name} ${record.last_name}`,
     },
     {
       title: 'Dept',
-      dataIndex: 'desc',
+      dataIndex: 'dept',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Job Title',
-      dataIndex: 'callNo',
-      // sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
+      dataIndex: 'job_title',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Phone Number',
-      dataIndex: 'status',
+      dataIndex: 'phonenumber',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Email',
-      dataIndex: 'updatedAt',
+      dataIndex: 'email',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Cell Phone',
-      dataIndex: 'owner',
+      dataIndex: 'cell_phone',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Loaction',
-      dataIndex: 'progress',
+      dataIndex: 'location',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Operation',
       render: (text, record) => (
-        <Fragment>
-          <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a>
-          <Divider type="vertical" />
-          <a
-            onClick={() => {
-              Modal.confirm({
-                title: 'Do you want to delete these items?',
-                content: 'When clicked the OK button, this dialog will be closed after 1 second',
-                onOk() {
-                  return new Promise((resolve, reject) => {
-                    setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-                  }).catch(() => console.log('Oops errors!'));
-                },
-                onCancel() {},
-              });
-            }}
-          >
-            Delete
-          </a>
-        </Fragment>
+        <a>
+          <Icon type="ellipsis" style={{ transform: 'rotate(90deg)', fontSize: '18px' }} />
+        </a>
+        // <Fragment>
+        //   <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a>
+        //   <Divider type="vertical" />
+        //   <a
+        //     onClick={() => {
+        //       Modal.confirm({
+        //         title: 'Do you want to delete these items?',
+        //         content: 'When clicked the OK button, this dialog will be closed after 1 second',
+        //         onOk() {
+        //           return new Promise((resolve, reject) => {
+        //             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+        //           }).catch(() => console.log('Oops errors!'));
+        //         },
+        //         onCancel() {},
+        //       });
+        //     }}
+        //   >
+        //     Delete
+        //   </a>
+        // </Fragment>
       ),
     },
   ];
@@ -437,7 +443,7 @@ class Contacts extends PureComponent {
     console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'contact/fetch',
     });
   }
 
@@ -452,8 +458,10 @@ class Contacts extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize,
+      limit: pagination.pageSize,
+      // currentPage: pagination.current,
+      // pageSize: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -462,7 +470,7 @@ class Contacts extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'contact/fetch',
       payload: params,
     });
   };
@@ -474,7 +482,7 @@ class Contacts extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'contact/fetch',
       payload: {},
     });
   };
@@ -527,8 +535,8 @@ class Contacts extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
-        payload: values,
+        type: 'contact/fetch',
+        // payload: values,
       });
     });
   };
@@ -623,7 +631,7 @@ class Contacts extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      contact: { data },
       loading,
     } = this.props;
     const { selectedRows, modalVisible, updateModalVisible, stepFormValues } = this.state;
@@ -700,6 +708,7 @@ class Contacts extends PureComponent {
               )}
             </div> */}
             <StandardTable
+              rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
               data={data}

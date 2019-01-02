@@ -81,10 +81,10 @@ export default {
     //   changeOrigin: true,
     //   pathRewrite: { '^/server': '' },
     // },
-    '/api': {
+    '/dev': {
       target: 'http://valveexpertise.com/',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: { '^/dev': '' },
     },
   },
   ignoreMomentLocale: true,

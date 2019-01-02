@@ -40,9 +40,9 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ asset, loading }) => ({
+  asset,
+  loading: loading.models.asset,
 }))
 @Form.create()
 class Service extends PureComponent {
@@ -74,23 +74,19 @@ class Service extends PureComponent {
   columns = [
     {
       title: 'Serial',
-      dataIndex: 'name',
+      dataIndex: 'serial',
     },
     {
       title: 'Product Type',
-      dataIndex: 'desc',
+      dataIndex: 'product_type',
     },
     {
       title: 'Model',
-      dataIndex: 'callNo',
-      // sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
+      dataIndex: 'model',
     },
     {
       title: 'Plant Type',
-      dataIndex: 'status',
+      dataIndex: 'plant_type',
     },
     {
       title: 'Add Report',
@@ -126,7 +122,7 @@ class Service extends PureComponent {
     // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
     });
   }
 
@@ -161,8 +157,8 @@ class Service extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize,
+      limit: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -171,7 +167,7 @@ class Service extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
       payload: params,
     });
   };
@@ -183,7 +179,7 @@ class Service extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
       payload: {},
     });
   };
@@ -212,7 +208,7 @@ class Service extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'asset/fetch',
         payload: values,
       });
     });
@@ -266,7 +262,7 @@ class Service extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      asset: { data },
       loading,
     } = this.props;
     const { selectedRows, visibleAdd, visibleHistory } = this.state;
@@ -284,6 +280,7 @@ class Service extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <StandardTable
+              rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
               data={data}

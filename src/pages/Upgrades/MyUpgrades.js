@@ -6,6 +6,7 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
 import DrawerUpgrades from '@/components/DrawerUpgrades';
+import DrawerInput from '@/components/DrawerInput';
 
 import styles from '../Service/Service.less';
 
@@ -22,6 +23,7 @@ const getValue = obj =>
 class MyUpgrades extends PureComponent {
   state = {
     visibleEdit: false,
+    visibleInput: false,
     selectedItem: {},
     selectedRows: [],
     formValues: {},
@@ -164,7 +166,7 @@ class MyUpgrades extends PureComponent {
   };
 
   onClose = () => {
-    this.setState({ visibleEdit: false });
+    this.setState({ visibleEdit: false, visibleInput: false });
   };
 
   checkChange = (index, list) => {
@@ -219,7 +221,7 @@ class MyUpgrades extends PureComponent {
       rule: { data },
       loading,
     } = this.props;
-    const { selectedRows, visibleEdit, selectedItem } = this.state;
+    const { selectedRows, visibleEdit, selectedItem, visibleInput } = this.state;
 
     const content = (
       <Row type="flex" align="middle">
@@ -233,6 +235,17 @@ class MyUpgrades extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <div style={{ marginTop: '-10px', marginBottom: '15px' }}>
+              <Button
+                icon="plus"
+                type="primary"
+                onClick={() => {
+                  this.setState({ visibleInput: true });
+                }}
+              >
+                Input
+              </Button>
+            </div>
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
@@ -244,6 +257,7 @@ class MyUpgrades extends PureComponent {
           </div>
         </Card>
         <DrawerUpgrades data={selectedItem} visible={visibleEdit} onClose={this.onClose} />
+        <DrawerInput visible={visibleInput} onClose={this.onClose} />
       </PageHeaderWrapper>
     );
   }

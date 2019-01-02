@@ -103,21 +103,6 @@ export async function updateFakeList(params) {
   });
 }
 
-export async function fakeAccountLogin(params) {
-  // return request('/api/login/account', {
-  //   method: 'POST',
-  //   body: params,
-  // });
-  return request('/api/usermgr/user_login/', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-export async function fakeAccountLogout() {
-  return request('/api/usermgr/login_out/');
-}
-
 export async function fakeRegister(params) {
   return request('/api/register', {
     method: 'POST',
@@ -131,4 +116,68 @@ export async function queryNotices() {
 
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
+}
+
+/**
+ * login logout
+ */
+export async function fakeAccountLogin(params) {
+  // return request('/api/login/account', {
+  //   method: 'POST',
+  //   body: params,
+  // });
+  return request('/dev/usermgr/user_login/', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function fakeAccountLogout() {
+  return request('/dev/usermgr/login_out/');
+}
+
+/**
+ * contact
+ */
+
+export async function queryContact(params) {
+  return request(`/dev/api/v1/contact/?${stringify(params)}`);
+}
+
+export async function removeContact(params) {
+  return request('/dev/api/v1/contact', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'delete',
+    },
+  });
+}
+
+export async function addContact(params) {
+  return request('/dev/api/v1/contact', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function updateContact(params) {
+  return request('/dev/api/v1/contact', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'update',
+    },
+  });
+}
+
+/**
+ * asset
+ */
+
+export async function queryAsset(params) {
+  return request(`/dev/api/v1/asset/?${stringify(params)}`);
 }

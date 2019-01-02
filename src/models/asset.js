@@ -1,0 +1,66 @@
+import { queryAsset } from '@/services/api';
+
+export default {
+  namespace: 'asset',
+
+  state: {
+    data: {
+      list: [],
+      pagination: {},
+    },
+  },
+
+  effects: {
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryAsset, payload);
+      console.log(response);
+      let res = {
+        list: response.objects,
+        pagination: {
+          total: response.meta.total_count,
+          pageSize: response.meta.limit,
+          current:
+            parseInt((response.meta.offset + response.meta.limit) / response.meta.limit, 10) || 1,
+        },
+      };
+      yield put({
+        type: 'save',
+        payload: res,
+      });
+    },
+    // *add({ payload, callback }, { call, put }) {
+    //   const response = yield call(addContact, payload);
+    //   yield put({
+    //     type: 'save',
+    //     payload: response,
+    //   });
+    //   if (callback) callback();
+    // },
+    // *remove({ payload, callback }, { call, put }) {
+    //   const response = yield call(removeContact, payload);
+    //   yield put({
+    //     type: 'save',
+    //     payload: response,
+    //   });
+    //   if (callback) callback();
+    // },
+    // *update({ payload, callback }, { call, put }) {
+    //   const response = yield call(updateContact, payload);
+    //   yield put({
+    //     type: 'save',
+    //     payload: response,
+    //   });
+    //   if (callback) callback();
+    // },
+  },
+
+  reducers: {
+    save(state, action) {
+      // console.log(action.payload);
+      return {
+        ...state,
+        data: action.payload,
+      };
+    },
+  },
+};
