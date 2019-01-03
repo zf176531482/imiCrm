@@ -181,3 +181,15 @@ export async function updateContact(params) {
 export async function queryAsset(params) {
   return request(`/dev/api/v1/asset/?${stringify(params)}`);
 }
+
+export async function queryAssetFile(params) {
+  return request(`/dev/api/v1/assetfile/?${stringify(params)}`);
+}
+
+export async function queryAssetProduct(params) {
+  return request(`/dev/api/v1/product/?${stringify(params)}`);
+}
+
+export async function queryAssetOrder(params) {
+  return request(`/dev/api/v1/assetorder/?${stringify(params)}`);
+}

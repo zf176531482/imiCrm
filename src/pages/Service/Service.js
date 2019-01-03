@@ -50,7 +50,7 @@ class Service extends PureComponent {
     visibleAdd: false,
     visibleHistory: false,
     selectedRows: [],
-
+    checkRow: {},
     formValues: {},
     filterOptions: [
       {
@@ -129,10 +129,10 @@ class Service extends PureComponent {
   showDrawer = (type, data) => {
     switch (type) {
       case DRAWER_TYPE.ADD_REPORT:
-        this.setState({ visibleAdd: true });
+        this.setState({ visibleAdd: true, checkRow: data });
         break;
       case DRAWER_TYPE.VIEW_HISTORY:
-        this.setState({ visibleHistory: true });
+        this.setState({ visibleHistory: true, checkRow: data });
         break;
       default:
         break;
@@ -265,7 +265,7 @@ class Service extends PureComponent {
       asset: { data },
       loading,
     } = this.props;
-    const { selectedRows, visibleAdd, visibleHistory } = this.state;
+    const { selectedRows, visibleAdd, visibleHistory, checkRow } = this.state;
 
     const content = (
       <Row type="flex" align="middle">
@@ -290,8 +290,8 @@ class Service extends PureComponent {
             />
           </div>
         </Card>
-        <DrawerForm visible={visibleAdd} onClose={this.onClose} />
-        <DrawerDetail visible={visibleHistory} onClose={this.onClose} />
+        <DrawerForm visible={visibleAdd} onClose={this.onClose} data={checkRow} />
+        <DrawerDetail visible={visibleHistory} onClose={this.onClose} data={checkRow} />
       </PageHeaderWrapper>
     );
   }

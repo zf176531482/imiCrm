@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'dva';
 import {
   Row,
   Col,
@@ -15,6 +16,10 @@ import {
 import StandardTable from '@/components/StandardTable';
 import styles from './index.less';
 
+@connect(({ asset, loading }) => ({
+  asset,
+  loading: loading.models.asset,
+}))
 class FormDrawer extends React.Component {
   state = {
     visible: false,
@@ -22,6 +27,7 @@ class FormDrawer extends React.Component {
     childrenDrawer: false,
     selectChildrenRows: [],
     chooseRows: [],
+    data: {},
   };
 
   uploadParams = {
@@ -58,6 +64,9 @@ class FormDrawer extends React.Component {
     if (this.state.visible != nextProps.visible) {
       this.setState({ visible: nextProps.visible });
     }
+    if (this.state.data != nextProps.data) {
+      this.setState({ data: nextProps.data });
+    }
   }
 
   handleSubmit = e => {
@@ -90,6 +99,10 @@ class FormDrawer extends React.Component {
       selectChildrenRows: chooseRows,
       childrenDrawer: true,
     });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'asset/fetch',
+    });
   };
 
   onChildrenDrawerClose = () => {
@@ -118,51 +131,34 @@ class FormDrawer extends React.Component {
   };
 
   renderChildrenDrawer = () => {
-    let data = {
-      list: [
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 1,
-          key: 1,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 2,
-          key: 2,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 3,
-          key: 3,
-        },
-      ],
-    };
-
     let columns = [
       {
-        title: 'Part Number',
-        dataIndex: 'partNumber',
+        title: 'Serial',
+        dataIndex: 'serial',
       },
       {
-        title: 'Part Name',
-        dataIndex: 'partName',
+        title: 'Product Type',
+        dataIndex: 'product_type',
       },
       {
-        title: 'Qty',
-        dataIndex: 'qty',
+        title: 'Model',
+        dataIndex: 'model',
       },
     ];
 
     let { selectChildrenRows } = this.state;
 
+    const {
+      asset: { data },
+      loading,
+    } = this.props;
+
     return (
       <div>
         <StandardTable
+          rowKey={record => record.id}
           selectedRows={selectChildrenRows}
-          // loading={loading}
+          loading={loading}
           data={data}
           columns={columns}
           hasPagination={false}
@@ -171,9 +167,14 @@ class FormDrawer extends React.Component {
           }}
           // onChange={this.handleStandardTableChange}
         />
-        <Button type="primary" block style={{ marginTop: '24px' }} onClick={this.childrenSubmit}>
-          Submit
-        </Button>
+        <div className={styles.btnContainer}>
+          <Button onClick={this.onChildrenDrawerClose} style={{ marginRight: 8 }}>
+            Cancel
+          </Button>
+          <Button onClick={this.childrenSubmit} type="primary">
+            Submit
+          </Button>
+        </div>
       </div>
     );
   };
@@ -185,7 +186,7 @@ class FormDrawer extends React.Component {
       data.push(
         <div key={index} className={styles.rows}>
           <Icon type="file-text" style={{ margin: '0 5px' }} />
-          {item.partNumber}
+          {item.serial}
           <Icon
             type="close"
             className={styles.close}
@@ -197,6 +198,18 @@ class FormDrawer extends React.Component {
       );
     });
     return data;
+  };
+
+  renderInfoAsset = () => {
+    let { data } = this.state;
+    let assetInfo = Object.keys(data)
+      .filter(item => item != 'resource_uri')
+      .map((item, index) => (
+        <span key={index} className={styles.infoAsset}>
+          {data[item]}
+        </span>
+      ));
+    return assetInfo;
   };
 
   render() {
@@ -219,14 +232,7 @@ class FormDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <Form.Item label="Asset Information" className={styles.label}>
-                <div className={styles.assetInfoContainer}>
-                  <span className={styles.infoAsset}>Hebi coal power</span>
-                  <span className={styles.infoAsset}>Power</span>
-                  <span className={styles.infoAsset}>Coal</span>
-                  <span className={styles.infoAsset}>902808-01</span>
-                  <span className={styles.infoAsset}>Conventional</span>
-                  <span className={styles.infoAsset}>840H</span>
-                </div>
+                <div className={styles.assetInfoContainer}>{this.renderInfoAsset()}</div>
               </Form.Item>
             </Col>
           </Row>
@@ -323,7 +329,7 @@ class FormDrawer extends React.Component {
             </Col>
           </Row>
           <Row>
-            <Col span={6}>
+            <Col span={8}>
               <Button onClick={this.showChildrenDrawer} type="dashed">
                 Add Assets <Icon type="plus" />
               </Button>
@@ -332,7 +338,7 @@ class FormDrawer extends React.Component {
 
             <Drawer
               title="Add Assets"
-              width={500}
+              width={650}
               closable={false}
               onClose={this.onChildrenDrawerClose}
               visible={childrenDrawer}

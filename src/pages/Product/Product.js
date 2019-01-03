@@ -1,6 +1,20 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Icon, Button, Modal, Badge, Divider, Drawer, Table } from 'antd';
+import moment from 'moment';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Icon,
+  Button,
+  Modal,
+  Badge,
+  Divider,
+  Drawer,
+  Table,
+  Spin,
+} from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
@@ -20,9 +34,12 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ asset, loading }) => ({
+  asset,
+  loading: loading.effects['asset/fetch'],
+  fileloading: loading.effects['asset/files'],
+  productloading: loading.effects['asset/products'],
+  orderloading: loading.effects['asset/orders'],
 }))
 @Form.create()
 class Product extends PureComponent {
@@ -34,6 +51,7 @@ class Product extends PureComponent {
     selectedRows: [],
     selectDrawerRows: [],
     selectHistoryRows: [],
+    checkRow: null,
     formValues: {},
     filterOptions: [
       {
@@ -57,23 +75,18 @@ class Product extends PureComponent {
   columns = [
     {
       title: 'Serial',
-      dataIndex: 'name',
+      dataIndex: 'serial',
     },
     {
       title: 'Product Type',
-      dataIndex: 'desc',
+      dataIndex: 'plant_type',
     },
     {
       title: 'Model',
-      dataIndex: 'callNo',
-      // sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
+      dataIndex: 'model',
     },
     {
       title: 'Project Documents',
-      dataIndex: 'status',
       render: (text, record) => (
         <a
           onClick={() => {
@@ -86,7 +99,6 @@ class Product extends PureComponent {
     },
     {
       title: 'Product Manual',
-      dataIndex: 'updatedAt',
       render: (text, record) => (
         <a
           onClick={() => {
@@ -99,7 +111,6 @@ class Product extends PureComponent {
     },
     {
       title: 'Spare Parts Recommendation',
-      dataIndex: 'owner',
       render: (text, record) => {
         return (
           <a
@@ -129,26 +140,39 @@ class Product extends PureComponent {
   ];
 
   componentDidMount() {
-    console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
     });
   }
 
   showDrawer = (type, data) => {
+    const { dispatch } = this.props;
+    this.setState({ checkRow: data });
     switch (type) {
       case DRAWER_TYPE.DOCUMENT:
         this.setState({ visibleDocuments: true });
+        dispatch({
+          type: 'asset/files',
+          payload: { asset__id: data.id },
+        });
         break;
       case DRAWER_TYPE.SPARE:
         this.setState({ visibleSpare: true });
+        dispatch({
+          type: 'asset/products',
+          payload: { asset__id: data.id },
+        });
         break;
       case DRAWER_TYPE.MANUAL:
         this.setState({ visibleManual: true });
         break;
       case DRAWER_TYPE.HISTORY:
         this.setState({ visibleHistory: true });
+        dispatch({
+          type: 'asset/orders',
+          payload: { asset__id: data.id },
+        });
         break;
       default:
         break;
@@ -184,7 +208,7 @@ class Product extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
       payload: params,
     });
   };
@@ -196,7 +220,7 @@ class Product extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'asset/fetch',
       payload: {},
     });
   };
@@ -225,11 +249,12 @@ class Product extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'asset/fetch',
         payload: values,
       });
     });
   };
+
   checkChange = (index, list) => {
     let { filterOptions } = this.state;
     filterOptions[index].data = list;
@@ -277,23 +302,29 @@ class Product extends PureComponent {
     );
   }
 
-  renderDocuments = () => {
+  renderDocuments = files => {
     let data = [];
-    for (let i = 0; i < 10; i++) {
-      data.push(
-        <Row key={i} type="flex" justify="start" align="middle" style={{ marginBottom: '24px' }}>
+    data = files.map((item, index) => {
+      return (
+        <Row
+          key={index}
+          type="flex"
+          justify="start"
+          align="middle"
+          style={{ marginBottom: '24px' }}
+        >
           <Col span={14}>
-            <a href="https://www.baidu.com" target="_blank">
+            <a href={`http://valveexpertise.com${item.file}`} target="_blank">
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <img
-                  style={{ height: '46px' }}
+                  style={{ height: '42px' }}
                   src={require('../../assets/ic_documents_pdf.png')}
                   alt=""
                 />
-                <div style={{ marginLeft: '10px' }}>
-                  <div style={{ fontSize: '15px', color: '#000' }}>MDRB_Y14649CZ-01</div>
+                <div style={{ marginLeft: '15px' }}>
+                  <div style={{ fontSize: '14px', color: '#000' }}>{item.file_name}</div>
                   <div style={{ fontSize: '12px', color: '#8B999F', marginTop: '2px' }}>
-                    ADOBE ACROBAT DOCUMENT
+                    {moment(item.date).format('MM/DD/YYYY , HH:MM')}
                   </div>
                 </div>
               </div>
@@ -303,57 +334,29 @@ class Product extends PureComponent {
             <span style={{ fontSize: '12px', color: '#8B999F' }}>59.8MB</span>
           </Col>
           <Col span={2} style={{ textAlign: 'right' }}>
-            <a
-              href="#"
-              onClick={() => {
-                window.location.href = 'https://www.baidu.com';
-              }}
-            >
+            <a href={`http://valveexpertise.com${item.file}`} target="_blank">
               <Icon style={{ fontSize: '24px' }} type="download" />
             </a>
           </Col>
         </Row>
       );
-    }
+    });
     return data;
   };
 
-  renderSpare = () => {
-    let data = {
-      list: [
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 1,
-          key: 1,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 2,
-          key: 2,
-        },
-        {
-          partNumber: 1094398428,
-          partName: 'Cage',
-          qty: 3,
-          key: 3,
-        },
-      ],
-    };
-
+  renderSpare = data => {
     let columns = [
       {
         title: 'Part Number',
-        dataIndex: 'partNumber',
+        dataIndex: 'part_number',
       },
       {
         title: 'Part Name',
-        dataIndex: 'partName',
+        dataIndex: 'part_name',
       },
       {
-        title: 'Qty',
-        dataIndex: 'qty',
+        title: 'Quantity',
+        dataIndex: 'quantity',
       },
     ];
 
@@ -362,6 +365,7 @@ class Product extends PureComponent {
       <div>
         <StandardTable
           selectedRows={selectDrawerRows}
+          rowKey={record => record.id}
           // loading={loading}
           data={data}
           columns={columns}
@@ -378,7 +382,7 @@ class Product extends PureComponent {
     );
   };
 
-  renderHistory = () => {
+  renderHistory = data => {
     const expandedRowRender = () => {
       const columns = [
         { title: '', dataIndex: 'padding' },
@@ -387,9 +391,9 @@ class Product extends PureComponent {
         { title: 'Qty', dataIndex: 'qty' },
       ];
 
-      const data = [];
+      let source = [];
       for (let i = 0; i < 3; ++i) {
-        data.push({
+        source.push({
           partNumber: '1094398428',
           partName: 'Cage',
           qty: 1,
@@ -397,44 +401,22 @@ class Product extends PureComponent {
           padding: '',
         });
       }
-      return <Table columns={columns} dataSource={data} pagination={false} />;
-    };
-
-    let data = {
-      list: [
-        {
-          orderNumber: '1094398428',
-          orderStatus: 'prodution',
-          dispatchDate: '20/02/2029',
-          key: 1,
-        },
-        {
-          orderNumber: '1094398428',
-          orderStatus: 'prodution',
-          dispatchDate: '20/02/2029',
-          key: 2,
-        },
-        {
-          orderNumber: '1094398428',
-          orderStatus: 'prodution',
-          dispatchDate: '20/02/2029',
-          key: 3,
-        },
-      ],
+      return <Table columns={columns} dataSource={source} pagination={false} />;
     };
 
     let columns = [
       {
         title: 'Order Number',
-        dataIndex: 'orderNumber',
+        dataIndex: 'sfdc_account',
       },
       {
         title: 'Order Status',
-        dataIndex: 'orderStatus',
+        dataIndex: 'order_status',
       },
       {
         title: 'Dispatch Date',
-        dataIndex: 'dispatchDate',
+        dataIndex: 'dispatched_date',
+        render: (text, record) => moment(text).format('MM/DD/YYYY , HH:MM'),
       },
     ];
 
@@ -444,6 +426,7 @@ class Product extends PureComponent {
         <StandardTable
           selectedRows={selectHistoryRows}
           // loading={loading}
+          rowKey={record => record.id}
           data={data}
           columns={columns}
           hasPagination={false}
@@ -462,8 +445,11 @@ class Product extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      asset: { data, files, products, orders },
       loading,
+      fileloading,
+      productloading,
+      orderloading,
     } = this.props;
     const { selectedRows, visibleSpare, visibleDocuments, visibleHistory } = this.state;
 
@@ -496,6 +482,7 @@ class Product extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <StandardTable
+              rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
               data={data}
@@ -513,7 +500,7 @@ class Product extends PureComponent {
           onClose={this.onClose}
           visible={visibleDocuments}
         >
-          {this.renderDocuments()}
+          <Spin spinning={fileloading}>{this.renderDocuments(files)}</Spin>
         </Drawer>
         <Drawer
           width={500}
@@ -523,7 +510,7 @@ class Product extends PureComponent {
           onClose={this.onClose}
           visible={visibleSpare}
         >
-          {this.renderSpare()}
+          <Spin spinning={productloading}>{this.renderSpare(products)}</Spin>
         </Drawer>
         <Drawer
           width={700}
@@ -533,7 +520,7 @@ class Product extends PureComponent {
           onClose={this.onClose}
           visible={visibleHistory}
         >
-          {this.renderHistory()}
+          <Spin spinning={orderloading}>{this.renderHistory(orders)}</Spin>
         </Drawer>
       </PageHeaderWrapper>
     );
