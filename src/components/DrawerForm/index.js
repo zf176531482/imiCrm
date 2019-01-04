@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import moment from 'moment';
 import {
   Row,
   Col,
@@ -16,9 +17,11 @@ import {
 import StandardTable from '@/components/StandardTable';
 import styles from './index.less';
 
-@connect(({ asset, loading }) => ({
+@connect(({ asset, service, loading }) => ({
   asset,
+  service,
   loading: loading.models.asset,
+  reportloading: loading.models.service,
 }))
 class FormDrawer extends React.Component {
   state = {
@@ -28,32 +31,7 @@ class FormDrawer extends React.Component {
     selectChildrenRows: [],
     chooseRows: [],
     data: {},
-  };
-
-  uploadParams = {
-    name: 'file',
-    action: '//jsonplaceholder.typicode.com/posts/',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
-
-  normFile = e => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
+    fileList: [],
   };
 
   componentDidMount() {
@@ -69,20 +47,63 @@ class FormDrawer extends React.Component {
     }
   }
 
+  normFile = e => {
+    this.setState({ fileList: e.fileList });
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  uploadFile = res => {
+    console.log(res.id);
+    console.log(this.state.fileList[0].originFileObj);
+    const { dispatch } = this.props;
+    let formData = new FormData();
+    formData.append('service_id', res.id);
+    formData.append('file', this.state.fileList[0].originFileObj);
+    dispatch({
+      type: 'service/connectFileReport',
+      payload: formData,
+      callback: () => {
+        message.success('Create success');
+        this.onClose();
+      },
+    });
+  };
+
   handleSubmit = e => {
+    const { chooseRows, data, spareDisabled } = this.state;
+    const { dispatch } = this.props;
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log(values);
       if (!err) {
-        console.log('Received values of form: ', values);
+        dispatch({
+          type: 'service/createReport',
+          payload: {
+            asset: data.resource_uri,
+            period_start: values.period[0].format(),
+            period_end: values.period[1].format(),
+            problem_description: values.description,
+            root_cause: values.rootCause,
+            action_taken: values.actionTaken,
+            spare_part_needed: !spareDisabled,
+            spare_detail: spareDisabled ? '' : values.sparePartDetail,
+            extra_assets: chooseRows.map(item => item.resource_uri),
+          },
+          callback: this.uploadFile,
+        });
       }
     });
   };
 
   onClose = () => {
     this.setState({
+      spareDisabled: true,
       selectChildrenRows: [],
       chooseRows: [],
+      data: {},
+      fileList: [],
     });
     this.props.onClose();
   };
@@ -100,9 +121,9 @@ class FormDrawer extends React.Component {
       childrenDrawer: true,
     });
     const { dispatch } = this.props;
-    dispatch({
-      type: 'asset/fetch',
-    });
+    // dispatch({
+    //   type: 'asset/fetch',
+    // });
   };
 
   onChildrenDrawerClose = () => {
@@ -119,7 +140,7 @@ class FormDrawer extends React.Component {
         childrenDrawer: false,
       },
       () => {
-        console.log(this.state.chooseRows);
+        // console.log(this.state.chooseRows);
       }
     );
   };
@@ -158,7 +179,7 @@ class FormDrawer extends React.Component {
         <StandardTable
           rowKey={record => record.id}
           selectedRows={selectChildrenRows}
-          loading={loading}
+          // loading={loading}
           data={data}
           columns={columns}
           hasPagination={false}
@@ -203,7 +224,10 @@ class FormDrawer extends React.Component {
   renderInfoAsset = () => {
     let { data } = this.state;
     let assetInfo = Object.keys(data)
-      .filter(item => item != 'resource_uri')
+      .filter(
+        item =>
+          item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
+      )
       .map((item, index) => (
         <span key={index} className={styles.infoAsset}>
           {data[item]}
@@ -213,8 +237,9 @@ class FormDrawer extends React.Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const { spareDisabled, visible, childrenDrawer } = this.state;
+    const { getFieldDecorator, setFieldsValue } = this.props.form;
+    const { spareDisabled, visible, childrenDrawer, fileList } = this.state;
+    const { reportloading } = this.props;
     return (
       <Drawer
         style={{
@@ -243,7 +268,14 @@ class FormDrawer extends React.Component {
                   rules: [{ required: true, message: 'Please choose the period' }],
                 })(
                   <DatePicker.RangePicker
-                    format={'MM/DD/YYYY'}
+                    showTime={{
+                      hideDisabledOptions: true,
+                      defaultValue: [
+                        moment('00:00:00', 'HH:mm:ss'),
+                        moment('23:59:59', 'HH:mm:ss'),
+                      ],
+                    }}
+                    format={'MM/DD/YYYY, HH:mm:ss'}
                     getPopupContainer={trigger => trigger.parentNode}
                   />
                 )}
@@ -254,10 +286,12 @@ class FormDrawer extends React.Component {
             <Col span={12}>
               <Form.Item label="Attach Report">
                 {getFieldDecorator('attachreport', {
+                  valuePropName: 'fileList',
+                  getValueFromEvent: this.normFile,
                   rules: [{ required: true, message: 'Please choose the attach report' }],
                 })(
-                  <Upload {...this.uploadParams}>
-                    <Button type="dashed">
+                  <Upload>
+                    <Button type="dashed" disabled={!!fileList.length}>
                       <Icon type="upload" /> Click to upload
                     </Button>
                   </Upload>
@@ -352,7 +386,7 @@ class FormDrawer extends React.Component {
           <Button onClick={this.onClose} style={{ marginRight: 8 }}>
             Cancel
           </Button>
-          <Button onClick={this.handleSubmit} type="primary">
+          <Button onClick={this.handleSubmit} type="primary" loading={reportloading}>
             Submit
           </Button>
         </div>

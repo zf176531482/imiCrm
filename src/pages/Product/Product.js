@@ -19,7 +19,7 @@ import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
-
+import { getFileSize, getHost } from '@/utils/utils';
 import styles from '../Contacts/Contacts.less';
 
 const DRAWER_TYPE = {
@@ -314,7 +314,7 @@ class Product extends PureComponent {
           style={{ marginBottom: '24px' }}
         >
           <Col span={14}>
-            <a href={`http://valveexpertise.com${item.file}`} target="_blank">
+            <a href={`${getHost() + item.file}`} target="_blank">
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <img
                   style={{ height: '42px' }}
@@ -331,7 +331,7 @@ class Product extends PureComponent {
             </a>
           </Col>
           <Col span={8} style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '12px', color: '#8B999F' }}>59.8MB</span>
+            <span style={{ fontSize: '12px', color: '#8B999F' }}>{getFileSize(item.size)}</span>
           </Col>
           <Col span={2} style={{ textAlign: 'right' }}>
             <a href={`http://valveexpertise.com${item.file}`} target="_blank">
@@ -375,9 +375,9 @@ class Product extends PureComponent {
           }}
           // onChange={this.handleStandardTableChange}
         />
-        <Button type="danger" block style={{ marginTop: '24px' }}>
+        {/* <Button type="danger" block style={{ marginTop: '24px' }}>
           <Icon type="delete" /> Delete
-        </Button>
+        </Button> */}
       </div>
     );
   };
@@ -436,9 +436,9 @@ class Product extends PureComponent {
           // onChange={this.handleStandardTableChange}
           expandedRowRender={expandedRowRender}
         />
-        <Button type="danger" block style={{ marginTop: '24px' }}>
+        {/* <Button type="danger" block style={{ marginTop: '24px' }}>
           <Icon type="delete" /> Delete
-        </Button>
+        </Button> */}
       </div>
     );
   };

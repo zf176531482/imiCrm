@@ -118,6 +118,7 @@ export default function request(url, option) {
       // newOptions.body is FormData
       newOptions.headers = {
         Accept: 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
         ...newOptions.headers,
       };
     }

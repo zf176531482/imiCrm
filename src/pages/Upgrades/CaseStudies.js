@@ -1,19 +1,32 @@
 import React, { PureComponent } from 'react';
-import { Row, Col, Card, Icon, Avatar } from 'antd';
+import { connect } from 'dva';
+import { Row, Col, Card, Icon, Avatar, Spin } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CaseStudies.less';
+import { getHost } from '@/utils/utils';
 
 const { Meta } = Card;
 
+@connect(({ upgrade, loading }) => ({
+  upgrade,
+  loading: loading.effects['upgrade/cases'],
+}))
 class CaseStudies extends PureComponent {
   state = {};
 
-  renderCardList = () => {
-    let data = [];
-    for (let i = 0; i < 10; i++)
-      data.push(
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'upgrade/cases',
+      payload: { limit: 0 },
+    });
+  }
+
+  renderCardList = cases => {
+    let data = cases.map((item, index) => {
+      return (
         <Card
-          key={i}
+          key={index}
           className={styles.card}
           loading={false}
           hoverable
@@ -21,7 +34,7 @@ class CaseStudies extends PureComponent {
             <img
               alt="example"
               style={{ height: '162px', width: '211px' }}
-              src={require('../../assets/test.jpg')}
+              src={`${getHost() + item.icon}`}
             />
           }
         >
@@ -43,9 +56,14 @@ class CaseStudies extends PureComponent {
           </div>
         </Card>
       );
+    });
     return data;
   };
   render() {
+    const {
+      upgrade: { cases },
+      loading,
+    } = this.props;
     const content = (
       <Row>
         <Col span={3}>
@@ -56,7 +74,9 @@ class CaseStudies extends PureComponent {
 
     return (
       <PageHeaderWrapper content={content}>
-        <div className={styles.container}>{this.renderCardList()}</div>
+        <div className={styles.container}>
+          <Spin spinning={loading}>{this.renderCardList(cases)}</Spin>
+        </div>
       </PageHeaderWrapper>
     );
   }

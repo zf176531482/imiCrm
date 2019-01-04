@@ -193,3 +193,32 @@ export async function queryAssetProduct(params) {
 export async function queryAssetOrder(params) {
   return request(`/dev/api/v1/assetorder/?${stringify(params)}`);
 }
+
+/**
+ * service report
+ */
+
+export async function createReport(params) {
+  return request('/dev/api/v1/servicereport/', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}
+
+export async function connectFileReport(formData) {
+  return request('/dev/api/v1/servicereport/upload_file/', {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+/**
+ * upgrade
+ */
+
+export async function queryCase(params) {
+  return request(`/dev/api/v1/successcase/?${stringify(params)}`);
+}
