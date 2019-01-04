@@ -14,6 +14,9 @@ module.exports = {
     page: true,
   },
   rules: {
+    'prefer-template': 0,
+    'no-unneeded-ternary': 0,
+    'no-unused-expressions': 0,
     'comment-empty-line-before': 0,
     'react/sort-comp': 0,
     'react/jsx-no-target-blank': 0,
