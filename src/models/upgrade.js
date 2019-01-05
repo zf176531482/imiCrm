@@ -1,4 +1,4 @@
-import { queryAsset, queryCase } from '@/services/api';
+import { queryAsset, queryCase, queryOpportunity } from '@/services/api';
 
 export default {
   namespace: 'upgrade',
@@ -9,6 +9,10 @@ export default {
       pagination: {},
     },
     cases: [],
+    opportunity: {
+      list: [],
+      pagination: {},
+    },
   },
 
   effects: {
@@ -35,6 +39,22 @@ export default {
         payload: response.objects,
       });
     },
+    *opportunity({ payload }, { call, put }) {
+      const response = yield call(queryOpportunity, payload);
+      let res = {
+        list: response.objects,
+        pagination: {
+          total: response.meta.total_count,
+          pageSize: response.meta.limit,
+          current:
+            parseInt((response.meta.offset + response.meta.limit) / response.meta.limit, 10) || 1,
+        },
+      };
+      yield put({
+        type: 'saveOpportunity',
+        payload: res,
+      });
+    },
   },
 
   reducers: {
@@ -49,6 +69,12 @@ export default {
       return {
         ...state,
         cases: action.payload,
+      };
+    },
+    saveOpportunity(state, action) {
+      return {
+        ...state,
+        opportunity: action.payload,
       };
     },
   },

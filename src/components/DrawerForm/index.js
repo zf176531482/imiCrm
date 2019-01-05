@@ -102,7 +102,6 @@ class FormDrawer extends React.Component {
       spareDisabled: true,
       selectChildrenRows: [],
       chooseRows: [],
-      data: {},
       fileList: [],
     });
     this.props.onClose();
@@ -223,16 +222,18 @@ class FormDrawer extends React.Component {
 
   renderInfoAsset = () => {
     let { data } = this.state;
-    let assetInfo = Object.keys(data)
-      .filter(
-        item =>
-          item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
-      )
-      .map((item, index) => (
-        <span key={index} className={styles.infoAsset}>
-          {data[item]}
-        </span>
-      ));
+    let assetInfo =
+      data &&
+      Object.keys(data)
+        .filter(
+          item =>
+            item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
+        )
+        .map((item, index) => (
+          <span key={index} className={styles.infoAsset}>
+            {data[item]}
+          </span>
+        ));
     return assetInfo;
   };
 
@@ -262,7 +263,7 @@ class FormDrawer extends React.Component {
             </Col>
           </Row>
           <Row gutter={16}>
-            <Col span={10}>
+            <Col span={24}>
               <Form.Item label="Period">
                 {getFieldDecorator('period', {
                   rules: [{ required: true, message: 'Please choose the period' }],

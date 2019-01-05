@@ -187,7 +187,7 @@ export function getHost() {
     return '';
   }
 
-  return 'valveexpertise.com';
+  return 'http://valveexpertise.com';
 }
 
 export function getFileSize(limit) {

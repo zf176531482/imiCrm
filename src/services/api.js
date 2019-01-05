@@ -215,10 +215,18 @@ export async function connectFileReport(formData) {
   });
 }
 
+export async function queryReport(params) {
+  return request(`/dev/api/v1/servicereport/?${stringify(params)}`);
+}
+
 /**
  * upgrade
  */
 
 export async function queryCase(params) {
   return request(`/dev/api/v1/successcase/?${stringify(params)}`);
+}
+
+export async function queryOpportunity(params) {
+  return request(`/dev/api/v1/opportunity/?${stringify(params)}`);
 }

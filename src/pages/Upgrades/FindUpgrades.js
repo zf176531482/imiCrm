@@ -14,9 +14,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ upgrade, loading }) => ({
+  upgrade,
+  loading: loading.effects['upgrade/opportunity'],
 }))
 @Form.create()
 class FindUpgrades extends PureComponent {
@@ -47,31 +47,28 @@ class FindUpgrades extends PureComponent {
   columns = [
     {
       title: 'Plant Name',
-      dataIndex: 'name',
+      dataIndex: 'plant_name',
     },
     {
       title: 'Application',
-      dataIndex: 'desc',
-    },
-    {
-      title: 'Plant Type',
-      dataIndex: 'callNo',
-      // sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
+      dataIndex: 'application',
     },
     {
       title: 'Product Type',
-      dataIndex: 'status',
+      dataIndex: 'product_type',
     },
     {
       title: 'Maker',
-      dataIndex: 'updatedAt',
+      dataIndex: 'maker',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Upgrade Type ',
-      dataIndex: 'owner',
+      dataIndex: 'upgrade_type',
+    },
+    {
+      title: 'Upgrade Status',
+      dataIndex: 'upgrade_status',
     },
     {
       title: 'Operation',
@@ -91,7 +88,7 @@ class FindUpgrades extends PureComponent {
     // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/opportunity',
     });
   }
 
@@ -106,8 +103,8 @@ class FindUpgrades extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize,
+      limit: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -116,7 +113,7 @@ class FindUpgrades extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/opportunity',
       payload: params,
     });
   };
@@ -128,7 +125,7 @@ class FindUpgrades extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/opportunity',
       payload: {},
     });
   };
@@ -157,7 +154,7 @@ class FindUpgrades extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'upgrade/opportunity',
         payload: values,
       });
     });
@@ -216,7 +213,7 @@ class FindUpgrades extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      upgrade: { opportunity },
       loading,
     } = this.props;
     const { selectedRows, visibleEdit, selectedItem } = this.state;
@@ -234,9 +231,10 @@ class FindUpgrades extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <StandardTable
+              rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={opportunity}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

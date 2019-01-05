@@ -416,7 +416,8 @@ class Contacts extends PureComponent {
           <Icon type="ellipsis" style={{ transform: 'rotate(90deg)', fontSize: '18px' }} />
         </a>
         // <Fragment>
-        //   <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a>
+        //   {/* <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a> */}
+        //   <a onClick={() => {}}>Edit</a>
         //   <Divider type="vertical" />
         //   <a
         //     onClick={() => {

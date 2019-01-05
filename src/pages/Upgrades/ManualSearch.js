@@ -14,9 +14,9 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ rule, loading }) => ({
-  rule,
-  loading: loading.models.rule,
+@connect(({ upgrade, loading }) => ({
+  upgrade,
+  loading: loading.models.upgrade,
 }))
 @Form.create()
 class ManualSearch extends PureComponent {
@@ -47,35 +47,33 @@ class ManualSearch extends PureComponent {
   columns = [
     {
       title: 'Industry',
-      dataIndex: 'name',
+      dataIndex: 'industry',
     },
     {
       title: 'Application',
-      dataIndex: 'desc',
+      dataIndex: 'application',
     },
     {
-      title: 'Plant Type',
-      dataIndex: 'callNo',
-      // sorter: true,
-      render: val => `${val} 万`,
-      // mark to display a total number
-      needTotal: true,
+      title: 'Plant Name',
+      dataIndex: 'plant_name',
     },
     {
       title: 'Product Type',
-      dataIndex: 'status',
+      dataIndex: 'product_type',
     },
     {
       title: 'Maker',
-      dataIndex: 'updatedAt',
+      dataIndex: 'maker',
+      render: text => (text ? text : '--'),
     },
     {
       title: 'Model',
-      dataIndex: 'owner',
+      dataIndex: 'model',
     },
     {
       title: 'Typical Problem',
-      render: (text, record) => <div>1111</div>,
+      dataIndex: 'typical_problem',
+      render: text => (text ? text : '--'),
     },
   ];
 
@@ -83,7 +81,7 @@ class ManualSearch extends PureComponent {
     // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/opportunity',
     });
   }
 
@@ -208,7 +206,7 @@ class ManualSearch extends PureComponent {
 
   render() {
     const {
-      rule: { data },
+      upgrade: { opportunity },
       loading,
     } = this.props;
     const { selectedRows, visibleEdit, selectedItem } = this.state;
@@ -226,9 +224,10 @@ class ManualSearch extends PureComponent {
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <StandardTable
+              rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={opportunity}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

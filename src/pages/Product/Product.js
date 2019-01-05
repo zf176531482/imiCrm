@@ -39,7 +39,7 @@ const getValue = obj =>
   loading: loading.effects['asset/fetch'],
   fileloading: loading.effects['asset/files'],
   productloading: loading.effects['asset/products'],
-  orderloading: loading.effects['asset/orders'],
+  orderloading: loading.effects['asset/orders'] || loading.effects['asset/products'],
 }))
 @Form.create()
 class Product extends PureComponent {
@@ -173,6 +173,10 @@ class Product extends PureComponent {
           type: 'asset/orders',
           payload: { asset__id: data.id },
         });
+        dispatch({
+          type: 'asset/products',
+          payload: { asset__id: data.id },
+        });
         break;
       default:
         break;
@@ -198,8 +202,8 @@ class Product extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize,
+      limit: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -382,26 +386,36 @@ class Product extends PureComponent {
     );
   };
 
-  renderHistory = data => {
+  renderHistory = (data, products) => {
     const expandedRowRender = () => {
       const columns = [
-        { title: '', dataIndex: 'padding' },
-        { title: 'Part Number', dataIndex: 'partNumber' },
-        { title: 'Part Name', dataIndex: 'partName' },
-        { title: 'Qty', dataIndex: 'qty' },
+        {
+          title: '',
+          dataIndex: 'id',
+          render: () => {},
+        },
+        {
+          title: 'Part Number',
+          dataIndex: 'part_number',
+        },
+        {
+          title: 'Part Name',
+          dataIndex: 'part_name',
+        },
+        {
+          title: 'Quantity',
+          dataIndex: 'quantity',
+        },
       ];
 
-      let source = [];
-      for (let i = 0; i < 3; ++i) {
-        source.push({
-          partNumber: '1094398428',
-          partName: 'Cage',
-          qty: 1,
-          key: i,
-          padding: '',
-        });
-      }
-      return <Table columns={columns} dataSource={source} pagination={false} />;
+      return (
+        <Table
+          rowKey={record => record.id}
+          columns={columns}
+          dataSource={products.list}
+          pagination={false}
+        />
+      );
     };
 
     let columns = [
@@ -520,7 +534,7 @@ class Product extends PureComponent {
           onClose={this.onClose}
           visible={visibleHistory}
         >
-          <Spin spinning={orderloading}>{this.renderHistory(orders)}</Spin>
+          <Spin spinning={orderloading}>{this.renderHistory(orders, products)}</Spin>
         </Drawer>
       </PageHeaderWrapper>
     );

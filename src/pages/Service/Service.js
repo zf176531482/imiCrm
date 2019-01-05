@@ -50,7 +50,7 @@ class Service extends PureComponent {
     visibleAdd: false,
     visibleHistory: false,
     selectedRows: [],
-    checkRow: {},
+    checkRow: null,
     formValues: {},
     filterOptions: [
       {

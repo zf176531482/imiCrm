@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Card, Icon, Avatar, Spin } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from './CaseStudies.less';
-import { getHost } from '@/utils/utils';
+import { getFileSize, getHost } from '@/utils/utils';
 
 const { Meta } = Card;
 
@@ -18,14 +18,24 @@ class CaseStudies extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'upgrade/cases',
-      payload: { limit: 0 },
+      payload: { limit: 0, order_by: 'id' },
     });
   }
+
+  linkFile = item => {
+    console.log(item);
+    if (!item.link_file) {
+      return;
+    }
+
+    window.open(getHost() + item.link_file);
+  };
 
   renderCardList = cases => {
     let data = cases.map((item, index) => {
       return (
         <Card
+          onClick={this.linkFile(item)}
           key={index}
           className={styles.card}
           loading={false}
@@ -33,26 +43,17 @@ class CaseStudies extends PureComponent {
           cover={
             <img
               alt="example"
-              style={{ height: '162px', width: '211px' }}
+              style={{ height: '162px', width: '260px' }}
               src={`${getHost() + item.icon}`}
             />
           }
         >
-          <div className={styles.title}>Ulsan TPP</div>
-          <div className={styles.date}>5 Jan 2018</div>
+          <div className={styles.title}>
+            {item.link_file ? item.link_file.split('/').pop() : '--'}
+          </div>
+          <div className={styles.date}>{getFileSize(item.size)}</div>
           <div className={styles.detail} style={{ boxOrient: 'vertical' }}>
-            {`IMI CCI solves recurring maintenance issues at South American petrochemical plant. IMI
-            CCI solves recurring maintenance issues at South American petrochemical plant. IMI CCI
-            solves recurring maintenance issues at South American petrochemical plant IMI CCI solves
-            recurring maintenance issues at South American petrochemical plant. IMI CCI solves
-            recurring maintenance issues at South American petrochemical plant. IMI CCI solves
-            recurring maintenance issues at South American petrochemical plant IMI CCI solves
-            recurring maintenance issues at South American petrochemical plant recurring maintenance
-            issues at South American petrochemical plant recurring maintenance issues at South
-            American petrochemical plant recurring maintenance issues at South American
-            petrochemical plant recurring maintenance issues at South American petrochemical plant
-            recurring maintenance issues at South American petrochemical plant recurring maintenance
-            issues at South American petrochemical plant`}
+            {item.header}
           </div>
         </Card>
       );

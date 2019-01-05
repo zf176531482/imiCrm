@@ -11,13 +11,22 @@ import {
   Upload,
   message,
   Checkbox,
+  Spin,
 } from 'antd';
+import { connect } from 'dva';
+import moment from 'moment';
+import { getHost } from '@/utils/utils';
 import styles from './index.less';
 
+@connect(({ service, loading }) => ({
+  service,
+  loading: loading.effects['service/fetchReport'],
+}))
 class DetailDrawer extends React.Component {
   state = {
     visible: false,
     disabledFlag: true,
+    data: null,
   };
 
   componentDidMount() {
@@ -27,6 +36,19 @@ class DetailDrawer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.state.visible != nextProps.visible) {
       this.setState({ visible: nextProps.visible });
+      if (nextProps.visible) {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'service/fetchReport',
+          payload: {
+            order_by: '-id',
+            asset__id: nextProps.data.id,
+          },
+        });
+      }
+    }
+    if (nextProps.data && this.state.data != nextProps.data) {
+      this.setState({ data: nextProps.data });
     }
   }
 
@@ -34,20 +56,62 @@ class DetailDrawer extends React.Component {
     this.props.onClose();
   };
 
-  renderAssets = type => {
-    let data = [];
-    for (let index = 0; index < 4; index++) {
-      data.push(
-        <div key={index} className={styles.rows} style={{ marginBottom: index == 3 ? 0 : '10px' }}>
-          <Icon type={type ? 'paper-clip' : 'file-text'} style={{ margin: '0 5px' }} /> 1111111
+  renderFiles = fileUrl => {
+    if (!fileUrl) {
+      return <span style={{ marginLeft: '5px' }}>--</span>;
+    }
+
+    return (
+      <a className={styles.rows} href={`${getHost() + fileUrl}`} target="_blank">
+        <Icon type="paper-clip" style={{ margin: '0 5px' }} /> {fileUrl.split('/').pop()}
+      </a>
+    );
+  };
+
+  renderAssets = assets => {
+    if (!assets || !assets.length) {
+      return <span style={{ marginLeft: '5px' }}>--</span>;
+    }
+
+    let data = assets.map((item, index) => {
+      return (
+        <div
+          key={index}
+          className={styles.rows}
+          style={{ marginBottom: index == assets.length - 1 ? 0 : '5px' }}
+        >
+          <Icon type="file-text" style={{ margin: '0 5px' }} /> {item.serial}
         </div>
       );
-    }
+    });
+
     return data;
   };
 
+  renderInfoAsset = () => {
+    let { data } = this.state;
+    let assetInfo =
+      data &&
+      Object.keys(data)
+        .filter(
+          item =>
+            item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
+        )
+        .map((item, index) => (
+          <span key={index} className={styles.infoAsset}>
+            {data[item]}
+          </span>
+        ));
+    return assetInfo;
+  };
+
   render() {
-    const { disabledFlag, visible } = this.state;
+    const {
+      service: { report },
+      loading,
+    } = this.props;
+    const { disabledFlag, visible, data } = this.state;
+
     return (
       <Drawer
         style={{
@@ -61,71 +125,68 @@ class DetailDrawer extends React.Component {
         visible={visible}
         destroyOnClose={true}
       >
-        <Form layout="vertical" hideRequiredMark className={styles.drawerDetail}>
-          <Row>
-            <Col span={24}>
-              <Form.Item label="Asset Information" className={styles.label}>
-                <div className={styles.assetInfoContainer}>
-                  <span className={styles.infoAsset}>Hebi coal power</span>
-                  <span className={styles.infoAsset}>Power</span>
-                  <span className={styles.infoAsset}>Coal</span>
-                  <span className={styles.infoAsset}>902808-01</span>
-                  <span className={styles.infoAsset}>Conventional</span>
-                  <span className={styles.infoAsset}>840H</span>
-                </div>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={10}>
-              <Form.Item label="Period">
-                <DatePicker.RangePicker
-                  disabled={disabledFlag}
-                  format={'MM/DD/YYYY'}
-                  getPopupContainer={trigger => trigger.parentNode}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Attach Report">{this.renderAssets(true)}</Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item label="Add Assets">{this.renderAssets()}</Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item label="Other Description">
-                <Input rows={1} placeholder="please enter root cause" disabled={disabledFlag} />
-                <Input
-                  style={{ marginTop: '10px' }}
-                  rows={1}
-                  placeholder="please enter action taken"
-                  disabled={disabledFlag}
-                />
-                <Input.TextArea
-                  style={{ marginTop: '10px' }}
-                  rows={2}
-                  placeholder="please enter problem description"
-                  disabled={disabledFlag}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24}>
-              <Form.Item label="Spare Part Need">
-                <Input.TextArea
-                  rows={2}
-                  placeholder="please enter spare part detail"
-                  disabled={disabledFlag}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
+        <Spin spinning={loading}>
+          <Form layout="vertical" hideRequiredMark className={styles.drawerDetail}>
+            <Row>
+              <Col span={24}>
+                <Form.Item label="Asset Information" className={styles.label}>
+                  <div className={styles.assetInfoContainer}>{this.renderInfoAsset()}</div>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="Period">
+                  <DatePicker.RangePicker
+                    value={
+                      report.period_start && report.period_end
+                        ? [moment(report.period_start), moment(report.period_end)]
+                        : []
+                    }
+                    disabled={this.state.disabledFlag}
+                    format={'MM/DD/YYYY, HH:mm:ss'}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="Attach Report">{this.renderFiles(report.service_file)}</Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="Add Assets">{this.renderAssets(report.extra_assets)}</Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="Other Description">
+                  <Input rows={1} disabled={disabledFlag} value={report.root_cause} />
+                  <Input
+                    style={{ marginTop: '10px' }}
+                    rows={1}
+                    disabled={disabledFlag}
+                    value={report.action_taken}
+                  />
+                  <Input.TextArea
+                    style={{ marginTop: '10px' }}
+                    rows={2}
+                    disabled={disabledFlag}
+                    value={report.problem_description}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Form.Item label="Spare Part Need">
+                  <Input.TextArea rows={2} disabled={disabledFlag} value={report.spare_detail} />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Spin>
       </Drawer>
     );
   }
