@@ -74,6 +74,10 @@ export default {
   },
   externals: {
     '@antv/data-set': 'DataSet',
+    '@antv/g2': 'G2',
+    react: 'React',
+    bizcharts: 'BizCharts',
+    'react-dom': 'ReactDOM',
   },
   proxy: {
     // '/server/api/': {

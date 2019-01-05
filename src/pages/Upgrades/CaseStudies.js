@@ -35,7 +35,9 @@ class CaseStudies extends PureComponent {
     let data = cases.map((item, index) => {
       return (
         <Card
-          onClick={this.linkFile(item)}
+          onClick={() => {
+            this.linkFile(item);
+          }}
           key={index}
           className={styles.card}
           loading={false}
