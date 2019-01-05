@@ -48,6 +48,10 @@ class MyUpgrades extends PureComponent {
 
   columns = [
     {
+      title: 'Industry',
+      dataIndex: 'industry',
+    },
+    {
       title: 'Plant Name',
       dataIndex: 'plant_name',
     },

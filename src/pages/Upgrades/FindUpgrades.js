@@ -46,6 +46,10 @@ class FindUpgrades extends PureComponent {
 
   columns = [
     {
+      title: 'Industry',
+      dataIndex: 'industry',
+    },
+    {
       title: 'Plant Name',
       dataIndex: 'plant_name',
     },
@@ -65,10 +69,6 @@ class FindUpgrades extends PureComponent {
     {
       title: 'Upgrade Type ',
       dataIndex: 'upgrade_type',
-    },
-    {
-      title: 'Upgrade Status',
-      dataIndex: 'upgrade_status',
     },
     {
       title: 'Operation',

@@ -38,6 +38,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  :global {
+    .ant-input:not(:first-child) {
+      padding-left: 36px !important;
+      padding-bottom: 7px !important;
+      height: 40px;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+  }
 }
 
 .bg {
@@ -84,16 +93,6 @@
   font-size: 16px;
   line-height: 16px;
   border-radius: 3px;
-}
-
-:global {
-  .ant-input:not(:first-child) {
-    padding-left: 36px !important;
-    // padding-bottom: 7px !important;
-    height: 40px;
-    border-radius: 3px;
-    font-size: 14px;
-  }
 }
 
 @media screen and (max-width: 850px) {

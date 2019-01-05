@@ -79,6 +79,7 @@ export default {
     bizcharts: 'BizCharts',
     'react-dom': 'ReactDOM',
   },
+  // publicPath: 'http://valveexpertise.com/static/',
   proxy: {
     // '/server/api/': {
     //   target: 'https://preview.pro.ant.design/',

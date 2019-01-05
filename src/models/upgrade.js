@@ -1,37 +1,21 @@
-import { queryAsset, queryCase, queryOpportunity } from '@/services/api';
+import { queryCase, queryOpportunity, queryCompleteValues, plantinput } from '@/services/api';
 
 export default {
   namespace: 'upgrade',
 
   state: {
-    data: {
+    cases: [],
+    opportunity: {
       list: [],
       pagination: {},
     },
-    cases: [],
-    opportunity: {
+    completeValues: {
       list: [],
       pagination: {},
     },
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {
-      const response = yield call(queryAsset, payload);
-      let res = {
-        list: response.objects,
-        pagination: {
-          total: response.meta.total_count,
-          pageSize: response.meta.limit,
-          current:
-            parseInt((response.meta.offset + response.meta.limit) / response.meta.limit, 10) || 1,
-        },
-      };
-      yield put({
-        type: 'save',
-        payload: res,
-      });
-    },
     *cases({ payload }, { call, put }) {
       const response = yield call(queryCase, payload);
       yield put({
@@ -55,16 +39,29 @@ export default {
         payload: res,
       });
     },
+    *completeValues({ payload }, { call, put }) {
+      const response = yield call(queryCompleteValues, payload);
+      let res = {
+        list: response.objects,
+        pagination: {
+          total: response.meta.total_count,
+          pageSize: response.meta.limit,
+          current:
+            parseInt((response.meta.offset + response.meta.limit) / response.meta.limit, 10) || 1,
+        },
+      };
+      yield put({
+        type: 'saveCompleteValues',
+        payload: res,
+      });
+    },
+    *input({ payload, callback }, { call }) {
+      const response = yield call(plantinput, payload);
+      if (callback) callback();
+    },
   },
 
   reducers: {
-    save(state, action) {
-      // console.log(action.payload);
-      return {
-        ...state,
-        data: action.payload,
-      };
-    },
     saveCase(state, action) {
       return {
         ...state,
@@ -75,6 +72,12 @@ export default {
       return {
         ...state,
         opportunity: action.payload,
+      };
+    },
+    saveCompleteValues(state, action) {
+      return {
+        ...state,
+        completeValues: action.payload,
       };
     },
   },

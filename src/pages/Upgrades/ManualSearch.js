@@ -46,20 +46,8 @@ class ManualSearch extends PureComponent {
 
   columns = [
     {
-      title: 'Industry',
-      dataIndex: 'industry',
-    },
-    {
       title: 'Application',
       dataIndex: 'application',
-    },
-    {
-      title: 'Plant Name',
-      dataIndex: 'plant_name',
-    },
-    {
-      title: 'Product Type',
-      dataIndex: 'product_type',
     },
     {
       title: 'Maker',
@@ -69,6 +57,14 @@ class ManualSearch extends PureComponent {
     {
       title: 'Model',
       dataIndex: 'model',
+    },
+    {
+      title: 'Product Type',
+      dataIndex: 'product_type',
+    },
+    {
+      title: 'Success Case No',
+      dataIndex: 'success_case_no',
     },
     {
       title: 'Typical Problem',
@@ -81,7 +77,7 @@ class ManualSearch extends PureComponent {
     // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
-      type: 'upgrade/opportunity',
+      type: 'upgrade/completeValues',
     });
   }
 
@@ -96,8 +92,8 @@ class ManualSearch extends PureComponent {
     }, {});
 
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      offset: (pagination.current - 1) * pagination.pageSize,
+      limit: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -106,7 +102,7 @@ class ManualSearch extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/completeValues',
       payload: params,
     });
   };
@@ -118,7 +114,7 @@ class ManualSearch extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'upgrade/completeValues',
       payload: {},
     });
   };
@@ -147,7 +143,7 @@ class ManualSearch extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'upgrade/completeValues',
         payload: values,
       });
     });
@@ -206,7 +202,7 @@ class ManualSearch extends PureComponent {
 
   render() {
     const {
-      upgrade: { opportunity },
+      upgrade: { completeValues },
       loading,
     } = this.props;
     const { selectedRows, visibleEdit, selectedItem } = this.state;
@@ -227,7 +223,7 @@ class ManualSearch extends PureComponent {
               rowKey={record => record.id}
               selectedRows={selectedRows}
               loading={loading}
-              data={opportunity}
+              data={completeValues}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}

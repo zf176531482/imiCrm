@@ -13,6 +13,7 @@ import {
   Radio,
   Divider,
 } from 'antd';
+import { getHost } from '@/utils/utils';
 import styles from './index.less';
 
 const radios = [
@@ -26,9 +27,13 @@ const radios = [
   },
 ];
 
-@Form.create()
+// @connect(({ upgrade, loading }) => ({
+//   upgrade,
+//   loading: loading.effects['upgrade/input'],
+// }))
 class UpgradesDrawer extends React.Component {
   state = {
+    data: {},
     visible: false,
     checkVisible: false,
     markVisible: false,
@@ -50,6 +55,10 @@ class UpgradesDrawer extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.state.visible != nextProps.visible) {
       this.setState({ visible: nextProps.visible });
+    }
+    if (this.state.data != nextProps.data) {
+      this.setState({ data: nextProps.data });
+      console.log(nextProps.data);
     }
   }
 
@@ -78,7 +87,21 @@ class UpgradesDrawer extends React.Component {
     this.props.onClose();
   };
 
-  handleSubmit = () => {};
+  handleSubmit = () => {
+    const { marker, problem, solution } = this.state;
+    // if(marker && problem && solution) {
+    //   dispatch({
+    //     type: 'service/input',
+    //     payload: formData,
+    //     callback: () => {
+    //       message.success('Create success');
+    //       this.onClose();
+    //     },
+    //   });
+    // } else {
+    //   message.error('Please enter all');
+    // }
+  };
 
   handleMarkOk = () => {
     let { marker, problem, solution } = this;
@@ -175,7 +198,7 @@ class UpgradesDrawer extends React.Component {
           height: 'calc(100% - 108px)',
           paddingBottom: '108px',
         }}
-        title={data.name}
+        title={data.product_type}
         width={500}
         onClose={this.onClose}
         visible={visible}
@@ -185,6 +208,7 @@ class UpgradesDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px' }}>
+                {/* {`${data.location}, ${data.country}`} */}
                 Gyeonggi-do, South Korea
               </div>
             </Col>
@@ -192,21 +216,27 @@ class UpgradesDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Application :">
-                <div>BFW control valve</div>
+                <div>{data.application}</div>
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Upgrade Type :">
-                <div>UGV</div>
+                <div>{data.upgrade_status}</div>
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Success story :">
-                <Icon type="file-text" />
+                {data.success_story && data.success_story.link_file ? (
+                  <a href={`${getHost() + data.success_story.link_file}`} target="_blank">
+                    <Icon type="file-text" /> {data.success_story.link_file.split('/').pop()}
+                  </a>
+                ) : (
+                  '--'
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -251,21 +281,23 @@ class UpgradesDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Name :">
-                <div>Example Name</div>
+                <div>
+                  {data.contact ? `${data.contact.first_name} ${data.contact.last_name}` : '--'}
+                </div>
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Phone :">
-                <div>+012398493482</div>
+                <div>{data.contact ? `+${data.contact.phonenumber}` : '--'}</div>
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Email :">
-                <div>176531482@qq.com</div>
+                <div>{data.contact ? data.contact.email : '--'}</div>
               </Form.Item>
             </Col>
           </Row>

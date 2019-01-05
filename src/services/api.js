@@ -230,3 +230,17 @@ export async function queryCase(params) {
 export async function queryOpportunity(params) {
   return request(`/dev/api/v1/opportunity/?${stringify(params)}`);
 }
+
+export async function queryCompleteValues(params) {
+  return request(`/dev/api/v1/completevalues/?${stringify(params)}`);
+}
+
+export async function plantinput(params) {
+  return request('/dev/api/v1/plantinput/', {
+    method: 'POST',
+    body: {
+      ...params,
+      method: 'post',
+    },
+  });
+}

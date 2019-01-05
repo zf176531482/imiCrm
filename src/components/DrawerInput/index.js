@@ -13,9 +13,14 @@ import {
   Checkbox,
   Radio,
 } from 'antd';
+import { connect } from 'dva';
 import StandardTable from '@/components/StandardTable';
 import styles from './index.less';
 
+@connect(({ upgrade, loading }) => ({
+  upgrade,
+  loading: loading.effects['upgrade/input'],
+}))
 class InputDrawer extends React.Component {
   state = {
     visible: false,
@@ -36,7 +41,19 @@ class InputDrawer extends React.Component {
     this.props.form.validateFields((err, values) => {
       console.log(values);
       if (!err) {
-        console.log('Received values of form: ', values);
+        // dispatch({
+        //   type: 'upgrade/input',
+        //   payload: {
+        //     "application": "{string}",
+        //     "id": 1,
+        //     "industry": "{string",
+        //     "plant_type": "{string",
+        //   },
+        //   callback: () => {
+        //     message.success('Create success');
+        //     this.onClose();
+        //   },
+        // });
       }
     });
   };
