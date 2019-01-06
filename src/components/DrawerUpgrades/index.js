@@ -208,8 +208,8 @@ class UpgradesDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <div style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '15px' }}>
-                {/* {`${data.location}, ${data.country}`} */}
-                Gyeonggi-do, South Korea
+                {`${data.location} ${data.country}`}
+                {/* Gyeonggi-do, South Korea */}
               </div>
             </Col>
           </Row>
@@ -329,7 +329,7 @@ class UpgradesDrawer extends React.Component {
           </Row>
           <Row>
             <Col span={24}>
-              <Form.Item {...this.formLayout} label="Problem :">
+              <Form.Item {...this.formLayout} label="Typical Problem :">
                 <div>{problem}</div>
               </Form.Item>
             </Col>

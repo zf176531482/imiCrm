@@ -120,7 +120,7 @@ class DetailDrawer extends React.Component {
           paddingBottom: '108px',
         }}
         title="View History"
-        width={650}
+        width={700}
         onClose={this.onClose}
         visible={visible}
         destroyOnClose={true}

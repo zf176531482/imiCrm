@@ -213,3 +213,19 @@ export function getFileSize(limit) {
   }
   return size;
 }
+
+export function formatFilter(filter) {
+  let list = {};
+  filter.map(item => {
+    !list[`${item.key + '__in'}`] && (list[`${item.key + '__in'}`] = []);
+    item.data.map(option => {
+      if (option.checked) {
+        list[`${item.key + '__in'}`].push(option.name);
+      }
+    });
+    !list[`${item.key + '__in'}`].length && delete list[`${item.key + '__in'}`];
+    list[`${item.key + '__in'}`] &&
+      (list[`${item.key + '__in'}`] = list[`${item.key + '__in'}`].join());
+  });
+  return list;
+}

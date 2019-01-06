@@ -517,7 +517,7 @@ class Product extends PureComponent {
           <Spin spinning={fileloading}>{this.renderDocuments(files)}</Spin>
         </Drawer>
         <Drawer
-          width={500}
+          width={700}
           title="Spare Parts Recommendation"
           placement="right"
           closable={true}

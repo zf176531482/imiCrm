@@ -2,24 +2,41 @@ import React, { PureComponent } from 'react';
 import { Checkbox, Icon, Button, Dropdown, Menu } from 'antd';
 import styles from './index.less';
 
-export default class SelectCheckbox extends PureComponent {
+export default class SelectCheckbox extends React.Component {
   state = {
     visible: false,
     num: 0,
     indeterminate: false,
     checkAll: false,
-    list: this.props.data,
+    list: [],
     checkList: [],
   };
 
   componentDidMount() {
     document.addEventListener('click', this.toClick);
-    let list = this.setCheckList(this.props.data);
-    this.setState({
-      checkList: list,
-      indeterminate: !(list.length == 0 || list.length == this.state.list.length),
-      checkAll: list.length == this.state.list.length,
+  }
+
+  setCheckList = list => {
+    let tmp = list;
+    let checkList = [];
+    tmp.map(item => {
+      if (item.checked) {
+        checkList.push(item);
+      }
     });
+    return checkList;
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.list !== nextProps.data) {
+      let list = this.setCheckList(nextProps.data);
+      this.setState({
+        list: nextProps.data,
+        checkList: list,
+        indeterminate: !(list.length == 0 || list.length == nextProps.data.length),
+        checkAll: list.length == nextProps.data.length,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -52,17 +69,6 @@ export default class SelectCheckbox extends PureComponent {
       return item;
     });
     return list;
-  };
-
-  setCheckList = list => {
-    let tmp = list;
-    let checkList = [];
-    tmp.map(item => {
-      if (item.checked) {
-        checkList.push(item);
-      }
-    });
-    return checkList;
   };
 
   onChange = (e, index) => {
@@ -122,6 +128,7 @@ export default class SelectCheckbox extends PureComponent {
         onClick={() => {
           this.setState({ num: this.state.num + 1 });
         }}
+        style={{ maxHeight: '300px', overflowY: 'auto' }}
       >
         <Menu.Item>
           <Checkbox

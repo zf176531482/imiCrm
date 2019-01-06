@@ -1,4 +1,9 @@
-import { queryCase, queryOpportunity, queryCompleteValues, plantinput } from '@/services/api';
+import {
+  queryCase,
+  queryOpportunity,
+  queryCompleteValues,
+  createOpportunity,
+} from '@/services/api';
 
 export default {
   namespace: 'upgrade',
@@ -56,8 +61,8 @@ export default {
       });
     },
     *input({ payload, callback }, { call }) {
-      const response = yield call(plantinput, payload);
-      if (callback) callback();
+      const response = yield call(createOpportunity, payload);
+      if (callback) callback(response);
     },
   },
 

@@ -249,7 +249,7 @@ class FormDrawer extends React.Component {
           paddingBottom: '108px',
         }}
         title="Add Report"
-        width={650}
+        width={700}
         onClose={this.onClose}
         visible={visible}
         destroyOnClose={true}

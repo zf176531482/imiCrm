@@ -235,12 +235,11 @@ export async function queryCompleteValues(params) {
   return request(`/dev/api/v1/completevalues/?${stringify(params)}`);
 }
 
-export async function plantinput(params) {
-  return request('/dev/api/v1/plantinput/', {
+export async function createOpportunity(params) {
+  return request('/dev/api/v1/opportunity/', {
     method: 'POST',
     body: {
       ...params,
-      method: 'post',
     },
   });
 }

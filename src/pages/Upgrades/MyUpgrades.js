@@ -52,12 +52,12 @@ class MyUpgrades extends PureComponent {
       dataIndex: 'industry',
     },
     {
-      title: 'Plant Name',
-      dataIndex: 'plant_name',
-    },
-    {
       title: 'Application',
       dataIndex: 'application',
+    },
+    {
+      title: 'Plant Name',
+      dataIndex: 'plant_name',
     },
     {
       title: 'Product Type',

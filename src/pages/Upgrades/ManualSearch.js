@@ -66,11 +66,11 @@ class ManualSearch extends PureComponent {
       title: 'Success Case No',
       dataIndex: 'success_case_no',
     },
-    {
-      title: 'Typical Problem',
-      dataIndex: 'typical_problem',
-      render: text => (text ? text : '--'),
-    },
+    // {
+    //   title: 'Typical Problem',
+    //   dataIndex: 'typical_problem',
+    //   render: text => (text ? text : '--'),
+    // },
   ];
 
   componentDidMount() {
