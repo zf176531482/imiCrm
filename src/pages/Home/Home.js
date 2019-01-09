@@ -48,7 +48,7 @@ class Home extends Component {
             }}
           >
             <span className={`${styles.icon} icon-image2vector`} />
-            <div className={styles.text}>Contcts</div>
+            <div className={styles.text}>Contacts</div>
           </Col>
         </Row>
         <div className={styles.assist}>Assist Management</div>

@@ -176,6 +176,7 @@ class FormDrawer extends React.Component {
     return (
       <div>
         <StandardTable
+          hasCheck={true}
           rowKey={record => record.id}
           selectedRows={selectChildrenRows}
           // loading={loading}
@@ -222,25 +223,68 @@ class FormDrawer extends React.Component {
 
   renderInfoAsset = () => {
     let { data } = this.state;
-    let assetInfo =
-      data &&
-      Object.keys(data)
-        .filter(
-          item =>
-            item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
-        )
-        .map((item, index) => (
-          <span key={index} className={styles.infoAsset}>
-            {data[item]}
-          </span>
-        ));
-    return assetInfo;
+    !data && (data = {});
+    return (
+      <Row gutter={16}>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Serial :
+            </Col>
+            <Col span={16}>{data.serial}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Industry :
+            </Col>
+            <Col span={16}>{data.industry}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Application :
+            </Col>
+            <Col span={16}>{data.application}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Model :
+            </Col>
+            <Col span={16}>{data.model}</Col>
+          </Row>
+        </Col>
+        <Col span={24}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              Plant Name :
+            </Col>
+            <Col span={20}>{data.plant_name}</Col>
+          </Row>
+        </Col>
+        <Col span={24}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              Plant Type :
+            </Col>
+            <Col span={20}>{data.plant_type}</Col>
+          </Row>
+        </Col>
+      </Row>
+    );
   };
 
   render() {
     const { getFieldDecorator, setFieldsValue } = this.props.form;
     const { spareDisabled, visible, childrenDrawer, fileList } = this.state;
     const { reportloading } = this.props;
+    const beforeUpload = () => {
+      return false;
+    };
     return (
       <Drawer
         style={{
@@ -257,8 +301,12 @@ class FormDrawer extends React.Component {
         <Form layout="vertical" hideRequiredMark>
           <Row>
             <Col span={24}>
-              <Form.Item label="Asset Information" className={styles.label}>
-                <div className={styles.assetInfoContainer}>{this.renderInfoAsset()}</div>
+              <Form.Item
+                label="Asset Information"
+                className={styles.label}
+                style={{ marginBottom: '15px' }}
+              >
+                {this.renderInfoAsset()}
               </Form.Item>
             </Col>
           </Row>
@@ -269,14 +317,14 @@ class FormDrawer extends React.Component {
                   rules: [{ required: true, message: 'Please choose the period' }],
                 })(
                   <DatePicker.RangePicker
-                    showTime={{
-                      hideDisabledOptions: true,
-                      defaultValue: [
-                        moment('00:00:00', 'HH:mm:ss'),
-                        moment('23:59:59', 'HH:mm:ss'),
-                      ],
-                    }}
-                    format={'MM/DD/YYYY, HH:mm:ss'}
+                    // showTime={{
+                    //   hideDisabledOptions: true,
+                    //   defaultValue: [
+                    //     moment('00:00:00', 'HH:mm:ss'),
+                    //     moment('23:59:59', 'HH:mm:ss'),
+                    //   ],
+                    // }}
+                    format={'MM/DD/YYYY'}
                     getPopupContainer={trigger => trigger.parentNode}
                   />
                 )}
@@ -291,7 +339,7 @@ class FormDrawer extends React.Component {
                   getValueFromEvent: this.normFile,
                   rules: [{ required: true, message: 'Please choose the attach report' }],
                 })(
-                  <Upload>
+                  <Upload beforeUpload={beforeUpload}>
                     <Button type="dashed" disabled={!!fileList.length}>
                       <Icon type="upload" /> Click to upload
                     </Button>

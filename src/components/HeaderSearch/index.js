@@ -69,14 +69,19 @@ export default class HeaderSearch extends PureComponent {
   };
 
   enterSearchMode = () => {
-    const { onVisibleChange } = this.props;
-    onVisibleChange(true);
-    this.setState({ searchMode: true }, () => {
-      const { searchMode } = this.state;
-      if (searchMode) {
-        this.input.focus();
-      }
-    });
+    const { onPressEnter } = this.props;
+    const { value } = this.state;
+    this.timeout = setTimeout(() => {
+      onPressEnter(value); // Fix duplicate onPressEnter
+    }, 0);
+    // const { onVisibleChange } = this.props;
+    // onVisibleChange(true);
+    // this.setState({ searchMode: true }, () => {
+    //   const { searchMode } = this.state;
+    //   if (searchMode) {
+    //     this.input.focus();
+    //   }
+    // });
   };
 
   leaveSearchMode = () => {
@@ -116,7 +121,7 @@ export default class HeaderSearch extends PureComponent {
           }
         }}
       >
-        <Icon type="search" key="Icon" />
+        <Icon type="search" key="Icon" style={{ marginTop: '10px' }} />
         <AutoComplete
           key="AutoComplete"
           {...restProps}

@@ -24,6 +24,8 @@ import HeaderSearch from '@/components/HeaderSearch';
 import SelectCheckbox from '@/components/SelectCheckbox';
 import DrawerForm from '@/components/DrawerForm';
 import DrawerDetail from '@/components/DrawerDetail';
+import { assetFilter } from '@/utils/constants';
+import { formatFilter } from '@/utils/utils';
 
 import styles from './Service.less';
 
@@ -52,23 +54,7 @@ class Service extends PureComponent {
     selectedRows: [],
     checkRow: null,
     formValues: {},
-    filterOptions: [
-      {
-        name: 'Dept',
-        data: [
-          { id: 1, name: 'Executive', checked: true },
-          { id: 2, name: 'Engineering', checked: false },
-        ],
-      },
-      {
-        name: 'Job Title',
-        data: [{ id: 1, name: '22', checked: true }, { id: 2, name: '33', checked: true }],
-      },
-      {
-        name: 'Location',
-        data: [{ id: 1, name: '44', checked: false }, { id: 2, name: '55', checked: false }],
-      },
-    ],
+    filterOptions: assetFilter(),
   };
 
   columns = [
@@ -119,7 +105,6 @@ class Service extends PureComponent {
   ];
 
   componentDidMount() {
-    // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
       type: 'asset/fetch',
@@ -150,11 +135,7 @@ class Service extends PureComponent {
     const { dispatch } = this.props;
     const { formValues } = this.state;
 
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
+    const filters = formatFilter(this.state.filterOptions);
 
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
@@ -173,11 +154,8 @@ class Service extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
-    this.setState({
-      formValues: {},
-    });
+    const { dispatch } = this.props;
+    this.setState({ filterOptions: assetFilter() });
     dispatch({
       type: 'asset/fetch',
       payload: {},
@@ -193,24 +171,15 @@ class Service extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
 
-    const { dispatch, form } = this.props;
+    const { dispatch } = this.props;
 
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
+    const fileters = formatFilter(this.state.filterOptions);
 
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'asset/fetch',
-        payload: values,
-      });
+    dispatch({
+      type: 'asset/fetch',
+      payload: {
+        ...fileters,
+      },
     });
   };
   checkChange = (index, list) => {
@@ -242,11 +211,78 @@ class Service extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={20} sm={24}>
-            {this.renderFilter()}
+          <Col md={12} sm={24}>
+            {/* {this.renderFilter()} */}
+            <Row gutter={16}>
+              <Col span={24}>
+                <Select
+                  style={{ width: 120, marginRight: '10px' }}
+                  showSearch
+                  placeholder="Industry"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  // onFocus={handleFocus}
+                  // onBlur={handleBlur}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                  <Option value="tom">Tom</Option>
+                </Select>
+                <Select
+                  style={{ width: 120, marginRight: '10px' }}
+                  showSearch
+                  placeholder="Plant Type"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  // onFocus={handleFocus}
+                  // onBlur={handleBlur}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                  <Option value="tom">Tom</Option>
+                </Select>
+                <Select
+                  style={{ width: 120, marginRight: '10px' }}
+                  showSearch
+                  placeholder="Plant Name"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  // onFocus={handleFocus}
+                  // onBlur={handleBlur}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                  <Option value="tom">Tom</Option>
+                </Select>
+              </Col>
+            </Row>
           </Col>
-          <Col md={4} sm={24}>
-            <span className={styles.submitButtons} style={{ float: 'right' }}>
+          <Col
+            md={12}
+            sm={24}
+            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
+          >
+            <HeaderSearch
+              defaultOpen={true}
+              style={{ marginRight: '20px' }}
+              placeholder={'Serial'}
+              onSearch={value => {
+                console.log('input', value); // eslint-disable-line
+              }}
+              onPressEnter={value => {
+                console.log('enter', value); // eslint-disable-line
+              }}
+            />
+            <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>

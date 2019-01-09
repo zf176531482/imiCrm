@@ -14,10 +14,16 @@ export default {
     },
     *connectFileReport({ payload, callback }, { call }) {
       const response = yield call(connectFileReport, payload);
+      if (!response) {
+        return;
+      }
       if (callback) callback();
     },
     *fetchReport({ payload }, { call, put }) {
       const response = yield call(queryReport, payload);
+      if (!response) {
+        return;
+      }
       let res = [];
       if (response.objects.length) {
         res = response.objects.shift();

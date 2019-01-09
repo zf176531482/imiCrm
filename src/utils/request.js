@@ -84,6 +84,8 @@ const cachedSave = (response, hashcode) => {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, option) {
+  const baseUrl = (process.env.NODE_ENV !== 'production' ? '/dev' : '') + url;
+
   const options = {
     expirys: isAntdPro(),
     ...option,
@@ -92,7 +94,7 @@ export default function request(url, option) {
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+  const fingerprint = baseUrl + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()
     .update(fingerprint)
@@ -140,7 +142,7 @@ export default function request(url, option) {
     }
   }
   return (
-    fetch(url, newOptions)
+    fetch(baseUrl, newOptions)
       .then(checkStatus)
       // .then(response => cachedSave(response, hashcode))
       .then(response => {

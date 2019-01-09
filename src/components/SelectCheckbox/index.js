@@ -16,32 +16,32 @@ export default class SelectCheckbox extends React.Component {
     document.addEventListener('click', this.toClick);
   }
 
-  setCheckList = list => {
-    let tmp = list;
-    let checkList = [];
-    tmp.map(item => {
-      if (item.checked) {
-        checkList.push(item);
-      }
-    });
-    return checkList;
-  };
+  componentWillUnmount() {
+    document.removeEventListener('click', this.toClick);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.list !== nextProps.data) {
-      let list = this.setCheckList(nextProps.data);
+      const { data } = nextProps;
+      let checkList = this.setCheckList(data);
       this.setState({
-        list: nextProps.data,
-        checkList: list,
-        indeterminate: !(list.length == 0 || list.length == nextProps.data.length),
-        checkAll: list.length == nextProps.data.length,
+        list: data,
+        checkList: checkList,
+        indeterminate: !(checkList.length == 0 || checkList.length == data.length),
+        checkAll: checkList.length == data.length,
       });
     }
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.toClick);
-  }
+  setCheckList = list => list.filter(item => item.checked == true);
+
+  setList = checked => {
+    const list = this.state.list.map(item => {
+      item.checked = checked;
+      return item;
+    });
+    return list;
+  };
 
   toClick = () => {
     const { num } = this.state;
@@ -62,53 +62,33 @@ export default class SelectCheckbox extends React.Component {
     }
   };
 
-  setList = checked => {
-    let { list } = this.state;
-    list.map(item => {
-      item.checked = checked;
-      return item;
-    });
-    return list;
-  };
-
   onChange = (e, index) => {
-    let tmp = this.state.list;
-    tmp[index].checked = e.target.checked;
-    let checkList = this.setCheckList(tmp);
-    this.setState(
-      {
-        list: tmp,
-        checkList: checkList,
-        indeterminate: !(checkList.length == 0 || checkList.length == tmp.length),
-        checkAll: checkList.length == tmp.length,
-      },
-      () => {
-        this.props.onChange(this.state.list);
-      }
-    );
+    let { list } = this.state;
+    list[index].checked = e.target.checked;
+    let checkList = this.setCheckList(list);
+    this.setState({
+      list: list,
+      checkList: checkList,
+      indeterminate: !(checkList.length == 0 || checkList.length == list.length),
+      checkAll: checkList.length == list.length,
+    });
+    this.props.onChange(list);
   };
 
   onCheckAllChange = e => {
-    let { checkList } = this.state.checkList;
     let list = this.setList(e.target.checked);
-    this.setState(
-      {
-        indeterminate: false,
-        checkAll: e.target.checked,
-        list: list,
-        checkList: e.target.checked ? list : [],
-      },
-      () => {
-        this.props.onChange(this.state.list);
-      }
-    );
+    this.setState({
+      indeterminate: false,
+      checkAll: e.target.checked,
+      list: list,
+      checkList: e.target.checked ? list : [],
+    });
+    this.props.onChange(list);
   };
 
   renderMenu = () => {
-    let items = [];
-
-    this.state.list.map((item, index) => {
-      items.push(
+    const items = this.state.list.map((item, index) => {
+      return (
         <Menu.Item key={index}>
           <Checkbox
             value={index}

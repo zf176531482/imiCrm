@@ -229,3 +229,15 @@ export function formatFilter(filter) {
   });
   return list;
 }
+
+export function resetFilter(filter) {
+  const reset = filter.map(item => {
+    const opt = item.data.map(option => {
+      option.checked = false;
+      return option;
+    });
+    item.data = opt;
+    return item;
+  });
+  return reset;
+}

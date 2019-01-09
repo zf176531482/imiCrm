@@ -29,6 +29,10 @@ const DRAWER_TYPE = {
   HISTORY: 3,
 };
 
+const ORDER_STATUS = {
+  '0': 'Close',
+  '1': 'Open',
+};
 const getValue = obj =>
   Object.keys(obj)
     .map(key => obj[key])
@@ -288,11 +292,26 @@ class Product extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={20} sm={24}>
+          <Col md={12} sm={24}>
             {this.renderFilter()}
           </Col>
-          <Col md={4} sm={24}>
-            <span className={styles.submitButtons} style={{ float: 'right' }}>
+          <Col
+            md={12}
+            sm={24}
+            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
+          >
+            <HeaderSearch
+              defaultOpen={true}
+              style={{ marginRight: '20px' }}
+              placeholder={'Serial'}
+              onSearch={value => {
+                console.log('input', value); // eslint-disable-line
+              }}
+              onPressEnter={value => {
+                console.log('enter', value); // eslint-disable-line
+              }}
+            />
+            <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>
@@ -426,11 +445,12 @@ class Product extends PureComponent {
       {
         title: 'Order Status',
         dataIndex: 'order_status',
+        render: (text, record) => ORDER_STATUS[text],
       },
       {
         title: 'Dispatch Date',
         dataIndex: 'dispatched_date',
-        render: (text, record) => moment(text).format('MM/DD/YYYY , HH:MM'),
+        render: (text, record) => moment(text).format('MM/DD/YYYY'),
       },
     ];
 
@@ -472,7 +492,7 @@ class Product extends PureComponent {
         <Col span={12}>
           <h1 style={{ margin: 0, fontSize: '26px' }}>Product & Asset Information</h1>
         </Col>
-        <Col
+        {/* <Col
           span={12}
           style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
         >
@@ -487,7 +507,7 @@ class Product extends PureComponent {
           <Button className={styles.topBtns} type="primary" icon="download">
             Export
           </Button>
-        </Col>
+        </Col> */}
       </Row>
     );
     return (

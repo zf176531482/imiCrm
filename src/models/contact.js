@@ -32,6 +32,9 @@ export default {
     },
     *add({ payload, callback }, { call, put }) {
       const response = yield call(addContact, payload);
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'save',
         payload: response,
@@ -40,6 +43,9 @@ export default {
     },
     *remove({ payload, callback }, { call, put }) {
       const response = yield call(removeContact, payload);
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'save',
         payload: response,
@@ -48,6 +54,9 @@ export default {
     },
     *update({ payload, callback }, { call, put }) {
       const response = yield call(updateContact, payload);
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'save',
         payload: response,

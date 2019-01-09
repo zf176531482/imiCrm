@@ -16,6 +16,9 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryAsset, payload);
+      if (!response) {
+        return;
+      }
       let res = {
         list: response.objects,
         pagination: {
@@ -32,6 +35,9 @@ export default {
     },
     *files({ payload }, { call, put }) {
       const response = yield call(queryAssetFile, payload);
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'saveFile',
         payload: response.objects,
@@ -39,6 +45,9 @@ export default {
     },
     *products({ payload }, { call, put }) {
       const response = yield call(queryAssetProduct, payload);
+      if (!response) {
+        return;
+      }
       let res = {
         list: response.objects,
         pagination: {
@@ -55,6 +64,9 @@ export default {
     },
     *orders({ payload }, { call, put }) {
       const response = yield call(queryAssetOrder, payload);
+      if (!response) {
+        return;
+      }
       let res = {
         list: response.objects,
         pagination: {

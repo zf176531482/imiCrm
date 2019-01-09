@@ -1,6 +1,9 @@
 @import '~antd/lib/style/themes/default.less';
 
 .headerSearch {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
   :global(.anticon-search) {
     cursor: pointer;
     font-size: 16px;
@@ -25,7 +28,7 @@
       border-bottom: 1px solid @border-color-base;
     }
     &.show {
-      width: 210px;
+      width: 150px;
       margin-left: 8px;
     }
   }

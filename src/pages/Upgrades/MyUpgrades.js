@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Button, Divider, Modal } from 'antd';
+import { Row, Col, Card, Form, Button, Divider, Modal, Select } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
@@ -9,6 +9,8 @@ import DrawerUpgrades from '@/components/DrawerUpgrades';
 import DrawerInput from '@/components/DrawerInput';
 
 import styles from '../Service/Service.less';
+
+const { Option } = Select;
 
 const getValue = obj =>
   Object.keys(obj)
@@ -198,12 +200,27 @@ class MyUpgrades extends PureComponent {
   renderForm() {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={20} sm={24}>
-            {this.renderFilter()}
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }} type="flex">
+          <Col md={17} sm={24}>
+            {/* {this.renderFilter()} */}
           </Col>
-          <Col md={4} sm={24}>
-            <span className={styles.submitButtons} style={{ float: 'right' }}>
+          <Col
+            md={7}
+            sm={24}
+            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
+          >
+            <HeaderSearch
+              defaultOpen={true}
+              style={{ marginRight: '20px' }}
+              placeholder={'Plant Name'}
+              onSearch={value => {
+                console.log('input', value); // eslint-disable-line
+              }}
+              onPressEnter={value => {
+                console.log('enter', value); // eslint-disable-line
+              }}
+            />
+            <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>
@@ -236,7 +253,7 @@ class MyUpgrades extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <div style={{ marginTop: '-10px', marginBottom: '15px' }}>
+            <div style={{ marginBottom: '15px' }}>
               <Button
                 icon="plus"
                 type="primary"

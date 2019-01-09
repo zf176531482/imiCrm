@@ -23,6 +23,9 @@ export default {
   effects: {
     *cases({ payload }, { call, put }) {
       const response = yield call(queryCase, payload);
+      if (!response) {
+        return;
+      }
       yield put({
         type: 'saveCase',
         payload: response.objects,
@@ -30,6 +33,9 @@ export default {
     },
     *opportunity({ payload }, { call, put }) {
       const response = yield call(queryOpportunity, payload);
+      if (!response) {
+        return;
+      }
       let res = {
         list: response.objects,
         pagination: {
@@ -46,6 +52,9 @@ export default {
     },
     *completeValues({ payload }, { call, put }) {
       const response = yield call(queryCompleteValues, payload);
+      if (!response) {
+        return;
+      }
       let res = {
         list: response.objects,
         pagination: {

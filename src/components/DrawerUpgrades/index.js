@@ -20,12 +20,24 @@ const radios = [
   {
     id: 1,
     name: 'Exists on site',
+    color: '#099447',
   },
   {
     id: 2,
     name: 'No problem',
+    color: '#e4393c',
+  },
+  {
+    id: 3,
+    name: 'Unkown',
+    color: 'rgba(0, 0, 0, 0.65)',
   },
 ];
+
+const UPGRADE_TYPE = {
+  UGV: '#F5A623',
+  UGC: '#099447',
+};
 
 // @connect(({ upgrade, loading }) => ({
 //   upgrade,
@@ -37,10 +49,11 @@ class UpgradesDrawer extends React.Component {
     visible: false,
     checkVisible: false,
     markVisible: false,
-    checkValueIndex: 1,
+    checkValueIndex: 2,
     marker: '',
     problem: '',
     solution: '',
+    model: '',
   };
 
   formLayout = {
@@ -83,6 +96,7 @@ class UpgradesDrawer extends React.Component {
       marker: '',
       problem: '',
       solution: '',
+      model: '',
     });
     this.props.onClose();
   };
@@ -104,20 +118,21 @@ class UpgradesDrawer extends React.Component {
   };
 
   handleMarkOk = () => {
-    let { marker, problem, solution } = this;
+    let { marker, problem, solution, model } = this;
     marker && this.setState({ marker: marker });
+    model && this.setState({ model: model });
     problem && this.setState({ problem: problem });
     solution && this.setState({ solution: solution });
     this.setState({ markVisible: false });
   };
 
   renderCheckProblem = () => {
-    let arr = [];
-
-    radios.map((item, index) => {
-      arr.push(
+    let arr = radios.map((item, index) => {
+      return (
         <div key={index} style={{ marginBottom: index == radios.length - 1 ? '0' : '10px' }}>
-          <Radio value={index}>{item.name}</Radio>
+          <Radio value={index} style={{ color: item.color }}>
+            {item.name}
+          </Radio>
         </div>
       );
     });
@@ -138,6 +153,15 @@ class UpgradesDrawer extends React.Component {
               <Input
                 onChange={e => {
                   this.marker = e.target.value;
+                }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label="Model">
+              <Input
+                onChange={e => {
+                  this.model = e.target.value;
                 }}
               />
             </Form.Item>
@@ -189,6 +213,7 @@ class UpgradesDrawer extends React.Component {
       marker,
       problem,
       solution,
+      model,
     } = this.state;
     const { data } = this.props;
     return (
@@ -223,7 +248,12 @@ class UpgradesDrawer extends React.Component {
           <Row>
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Upgrade Type :">
-                <div>{data.upgrade_status}</div>
+                <div
+                  className={styles.type}
+                  style={{ background: `${UPGRADE_TYPE[data.upgrade_status]}` }}
+                >
+                  {data.upgrade_status}
+                </div>
               </Form.Item>
             </Col>
           </Row>
@@ -244,7 +274,9 @@ class UpgradesDrawer extends React.Component {
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Problem :">
                 <Row>
-                  <Col span={8}>{radios[checkValueIndex].name}</Col>
+                  <Col span={8} style={{ color: radios[checkValueIndex].color }}>
+                    {radios[checkValueIndex].name}
+                  </Col>
                   <Col span={6}>
                     <Popover
                       title="Problem"
@@ -324,6 +356,13 @@ class UpgradesDrawer extends React.Component {
             <Col span={24}>
               <Form.Item {...this.formLayout} label="Maker :">
                 <div>{marker}</div>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item {...this.formLayout} label="Model :">
+                <div>{model}</div>
               </Form.Item>
             </Col>
           </Row>

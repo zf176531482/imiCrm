@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Button, Divider, Modal } from 'antd';
+import { Row, Col, Card, Form, Button, Divider, Modal, Select } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
@@ -8,6 +8,8 @@ import SelectCheckbox from '@/components/SelectCheckbox';
 import DrawerUpgrades from '@/components/DrawerUpgrades';
 
 import styles from '../Service/Service.less';
+
+const { Option } = Select;
 
 const getValue = obj =>
   Object.keys(obj)
@@ -66,11 +68,23 @@ class ManualSearch extends PureComponent {
       title: 'Success Case No',
       dataIndex: 'success_case_no',
     },
-    // {
-    //   title: 'Typical Problem',
-    //   dataIndex: 'typical_problem',
-    //   render: text => (text ? text : '--'),
-    // },
+    {
+      title: 'Typical Problem',
+      dataIndex: 'typical_problem',
+      render: text => (text ? text : '--'),
+    },
+    {
+      title: 'Operation',
+      render: (text, record) => (
+        <a
+          onClick={() => {
+            // this.setState({ visibleEdit: true, selectedItem: record });
+          }}
+        >
+          Detail
+        </a>
+      ),
+    },
   ];
 
   componentDidMount() {
@@ -182,11 +196,62 @@ class ManualSearch extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={20} sm={24}>
-            {this.renderFilter()}
+          <Col md={12} sm={24}>
+            {/* {this.renderFilter()} */}
+            <Row gutter={16}>
+              <Col span={24}>
+                <Select
+                  style={{ width: 140, marginRight: '10px' }}
+                  showSearch
+                  placeholder="Application"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  // onFocus={handleFocus}
+                  // onBlur={handleBlur}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                  <Option value="tom">Tom</Option>
+                </Select>
+                <Select
+                  style={{ width: 140, marginRight: '10px' }}
+                  showSearch
+                  placeholder="Product Type"
+                  optionFilterProp="children"
+                  // onChange={handleChange}
+                  // onFocus={handleFocus}
+                  // onBlur={handleBlur}
+                  filterOption={(input, option) =>
+                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  <Option value="jack">Jack</Option>
+                  <Option value="lucy">Lucy</Option>
+                  <Option value="tom">Tom</Option>
+                </Select>
+              </Col>
+            </Row>
           </Col>
-          <Col md={4} sm={24}>
-            <span className={styles.submitButtons} style={{ float: 'right' }}>
+          <Col
+            md={12}
+            sm={24}
+            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
+          >
+            <HeaderSearch
+              defaultOpen={true}
+              style={{ marginRight: '20px' }}
+              placeholder={'Model'}
+              onSearch={value => {
+                console.log('input', value); // eslint-disable-line
+              }}
+              onPressEnter={value => {
+                console.log('enter', value); // eslint-disable-line
+              }}
+            />
+            <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 Search
               </Button>

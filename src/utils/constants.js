@@ -43,47 +43,114 @@ export const PLANT_TYPE = [
 
 export const PRODUCT_TYPE = ['Control Valve', 'BTG'];
 
-export const CONTACT_FILTER = [
-  {
-    name: 'Dept',
-    key: 'dept',
-    data: [
-      { name: 'AFM Inside Sales' },
-      { name: 'Aftermarket Engineer' },
-      { name: 'Aftermarket Outside Sales' },
-      { name: 'Engineering' },
-      { name: 'Executive' },
-      { name: 'Operation' },
-      { name: 'Service Center' },
-    ],
-  },
-  {
-    name: 'Job Title',
-    key: 'job_title',
-    data: [
-      { name: 'AFM Initiatives Manager' },
-      { name: 'Applicationl Engineer' },
-      { name: 'China MD' },
-      { name: 'Commissioning Engineer' },
-      { name: 'Design Engineer' },
-      { name: 'Designer' },
-      { name: 'Field Service Engineer' },
-      { name: 'Field Service Specialist' },
-      { name: 'Outside Sales Engineer' },
-      { name: 'Sales Engineer' },
-      { name: 'Sr. Application Engineer' },
-      { name: 'Sr. Designer' },
-    ],
-  },
-  {
-    name: 'Location',
-    key: 'location',
-    data: [
-      { name: 'Beijing' },
-      { name: 'Jinan' },
-      { name: 'Langfang' },
-      { name: 'Shanghai' },
-      { name: 'Wuhan' },
-    ],
-  },
-];
+export function contactFilter() {
+  return [
+    {
+      name: 'Dept',
+      key: 'dept',
+      data: [
+        { name: 'AFM Inside Sales' },
+        { name: 'Aftermarket Engineer' },
+        { name: 'Aftermarket Outside Sales' },
+        { name: 'Engineering' },
+        { name: 'Executive' },
+        { name: 'Operation' },
+        { name: 'Service Center' },
+      ],
+    },
+    {
+      name: 'Job Title',
+      key: 'job_title',
+      data: [
+        { name: 'AFM Initiatives Manager' },
+        { name: 'Applicationl Engineer' },
+        { name: 'China MD' },
+        { name: 'Commissioning Engineer' },
+        { name: 'Design Engineer' },
+        { name: 'Designer' },
+        { name: 'Field Service Engineer' },
+        { name: 'Field Service Specialist' },
+        { name: 'Outside Sales Engineer' },
+        { name: 'Sales Engineer' },
+        { name: 'Sr. Application Engineer' },
+        { name: 'Sr. Designer' },
+      ],
+    },
+    {
+      name: 'Location',
+      key: 'location',
+      data: [
+        { name: 'Beijing' },
+        { name: 'Jinan' },
+        { name: 'Langfang' },
+        { name: 'Shanghai' },
+        { name: 'Wuhan' },
+      ],
+    },
+  ];
+}
+
+export function assetFilter() {
+  return [
+    {
+      name: 'Industry',
+      key: 'industry',
+      data: [
+        { name: 'AFM Inside Sales' },
+        { name: 'Aftermarket Engineer' },
+        { name: 'Aftermarket Outside Sales' },
+        { name: 'Engineering' },
+        { name: 'Executive' },
+        { name: 'Operation' },
+        { name: 'Service Center' },
+      ],
+    },
+    {
+      name: 'Plant Name',
+      key: 'plant_name',
+      data: [
+        { name: 'AFM Initiatives Manager' },
+        { name: 'Applicationl Engineer' },
+        { name: 'China MD' },
+        { name: 'Commissioning Engineer' },
+        { name: 'Design Engineer' },
+        { name: 'Designer' },
+        { name: 'Field Service Engineer' },
+        { name: 'Field Service Specialist' },
+        { name: 'Outside Sales Engineer' },
+        { name: 'Sales Engineer' },
+        { name: 'Sr. Application Engineer' },
+        { name: 'Sr. Designer' },
+      ],
+    },
+    {
+      name: 'Plant Type',
+      key: 'plant_type',
+      data: [
+        { name: 'AFM Initiatives Manager' },
+        { name: 'Applicationl Engineer' },
+        { name: 'China MD' },
+        { name: 'Commissioning Engineer' },
+        { name: 'Design Engineer' },
+        { name: 'Designer' },
+        { name: 'Field Service Engineer' },
+        { name: 'Field Service Specialist' },
+        { name: 'Outside Sales Engineer' },
+        { name: 'Sales Engineer' },
+        { name: 'Sr. Application Engineer' },
+        { name: 'Sr. Designer' },
+      ],
+    },
+    {
+      name: 'Product Type',
+      key: 'product_type',
+      data: [
+        { name: 'Beijing' },
+        { name: 'Jinan' },
+        { name: 'Langfang' },
+        { name: 'Shanghai' },
+        { name: 'Wuhan' },
+      ],
+    },
+  ];
+}

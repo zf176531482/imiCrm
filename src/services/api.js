@@ -126,14 +126,14 @@ export async function fakeAccountLogin(params) {
   //   method: 'POST',
   //   body: params,
   // });
-  return request('/dev/usermgr/user_login/', {
+  return request('/usermgr/user_login/', {
     method: 'POST',
     body: params,
   });
 }
 
 export async function fakeAccountLogout() {
-  return request('/dev/usermgr/login_out/');
+  return request('/usermgr/login_out/');
 }
 
 /**
@@ -141,11 +141,11 @@ export async function fakeAccountLogout() {
  */
 
 export async function queryContact(params) {
-  return request(`/dev/api/v1/contact/?${stringify(params)}`);
+  return request(`/api/v1/contact/?${stringify(params)}`);
 }
 
 export async function removeContact(params) {
-  return request('/dev/api/v1/contact', {
+  return request('/api/v1/contact', {
     method: 'POST',
     body: {
       ...params,
@@ -155,7 +155,7 @@ export async function removeContact(params) {
 }
 
 export async function addContact(params) {
-  return request('/dev/api/v1/contact', {
+  return request('/api/v1/contact', {
     method: 'POST',
     body: {
       ...params,
@@ -165,7 +165,7 @@ export async function addContact(params) {
 }
 
 export async function updateContact(params) {
-  return request('/dev/api/v1/contact', {
+  return request('/api/v1/contact', {
     method: 'POST',
     body: {
       ...params,
@@ -179,19 +179,19 @@ export async function updateContact(params) {
  */
 
 export async function queryAsset(params) {
-  return request(`/dev/api/v1/asset/?${stringify(params)}`);
+  return request(`/api/v1/asset/?${stringify(params)}`);
 }
 
 export async function queryAssetFile(params) {
-  return request(`/dev/api/v1/assetfile/?${stringify(params)}`);
+  return request(`/api/v1/assetfile/?${stringify(params)}`);
 }
 
 export async function queryAssetProduct(params) {
-  return request(`/dev/api/v1/product/?${stringify(params)}`);
+  return request(`/api/v1/product/?${stringify(params)}`);
 }
 
 export async function queryAssetOrder(params) {
-  return request(`/dev/api/v1/assetorder/?${stringify(params)}`);
+  return request(`/api/v1/assetorder/?${stringify(params)}`);
 }
 
 /**
@@ -199,7 +199,7 @@ export async function queryAssetOrder(params) {
  */
 
 export async function createReport(params) {
-  return request('/dev/api/v1/servicereport/', {
+  return request('/api/v1/servicereport/', {
     method: 'POST',
     body: {
       ...params,
@@ -209,14 +209,14 @@ export async function createReport(params) {
 }
 
 export async function connectFileReport(formData) {
-  return request('/dev/api/v1/servicereport/upload_file/', {
+  return request('/api/v1/servicereport/upload_file/', {
     method: 'POST',
     body: formData,
   });
 }
 
 export async function queryReport(params) {
-  return request(`/dev/api/v1/servicereport/?${stringify(params)}`);
+  return request(`/api/v1/servicereport/?${stringify(params)}`);
 }
 
 /**
@@ -224,19 +224,19 @@ export async function queryReport(params) {
  */
 
 export async function queryCase(params) {
-  return request(`/dev/api/v1/successcase/?${stringify(params)}`);
+  return request(`/api/v1/successcase/?${stringify(params)}`);
 }
 
 export async function queryOpportunity(params) {
-  return request(`/dev/api/v1/opportunity/?${stringify(params)}`);
+  return request(`/api/v1/opportunity/?${stringify(params)}`);
 }
 
 export async function queryCompleteValues(params) {
-  return request(`/dev/api/v1/completevalues/?${stringify(params)}`);
+  return request(`/api/v1/completevalues/?${stringify(params)}`);
 }
 
 export async function createOpportunity(params) {
-  return request('/dev/api/v1/opportunity/', {
+  return request('/api/v1/opportunity/', {
     method: 'POST',
     body: {
       ...params,

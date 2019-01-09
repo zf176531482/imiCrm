@@ -90,19 +90,59 @@ class DetailDrawer extends React.Component {
 
   renderInfoAsset = () => {
     let { data } = this.state;
-    let assetInfo =
-      data &&
-      Object.keys(data)
-        .filter(
-          item =>
-            item != 'resource_uri' && item != 'id' && item != 'sfdc_account' && item != 'plant_name'
-        )
-        .map((item, index) => (
-          <span key={index} className={styles.infoAsset}>
-            {data[item]}
-          </span>
-        ));
-    return assetInfo;
+    !data && (data = {});
+    return (
+      <Row gutter={16}>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Serial :
+            </Col>
+            <Col span={16}>{data.serial}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Industry :
+            </Col>
+            <Col span={16}>{data.industry}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Application :
+            </Col>
+            <Col span={16}>{data.application}</Col>
+          </Row>
+        </Col>
+        <Col span={12}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={8} style={{ textAlign: 'right' }}>
+              Model :
+            </Col>
+            <Col span={16}>{data.model}</Col>
+          </Row>
+        </Col>
+        <Col span={24}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              Plant Name :
+            </Col>
+            <Col span={20}>{data.plant_name}</Col>
+          </Row>
+        </Col>
+        <Col span={24}>
+          <Row gutter={16} style={{ marginTop: '3px' }}>
+            <Col span={4} style={{ textAlign: 'right' }}>
+              Plant Type :
+            </Col>
+            <Col span={20}>{data.plant_type}</Col>
+          </Row>
+        </Col>
+      </Row>
+    );
   };
 
   render() {
@@ -129,8 +169,12 @@ class DetailDrawer extends React.Component {
           <Form layout="vertical" hideRequiredMark className={styles.drawerDetail}>
             <Row>
               <Col span={24}>
-                <Form.Item label="Asset Information" className={styles.label}>
-                  <div className={styles.assetInfoContainer}>{this.renderInfoAsset()}</div>
+                <Form.Item
+                  label="Asset Information"
+                  className={styles.label}
+                  style={{ marginBottom: '15px' }}
+                >
+                  {this.renderInfoAsset()}
                 </Form.Item>
               </Col>
             </Row>
@@ -144,7 +188,7 @@ class DetailDrawer extends React.Component {
                         : []
                     }
                     disabled={this.state.disabledFlag}
-                    format={'MM/DD/YYYY, HH:mm:ss'}
+                    format={'MM/DD/YYYY'}
                   />
                 </Form.Item>
               </Col>
@@ -156,7 +200,7 @@ class DetailDrawer extends React.Component {
             </Row>
             <Row gutter={16}>
               <Col span={24}>
-                <Form.Item label="Add Assets">{this.renderAssets(report.extra_assets)}</Form.Item>
+                <Form.Item label="Other Assets">{this.renderAssets(report.extra_assets)}</Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
