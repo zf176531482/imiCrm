@@ -106,6 +106,7 @@ export default function request(url, option) {
   const newOptions = { ...defaultOptions, ...options };
   if (
     newOptions.method === 'POST' ||
+    newOptions.method === 'PATCH' ||
     newOptions.method === 'PUT' ||
     newOptions.method === 'DELETE'
   ) {

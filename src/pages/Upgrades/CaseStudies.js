@@ -51,7 +51,7 @@ class CaseStudies extends PureComponent {
           }
         >
           <div className={styles.title}>
-            {item.link_file ? item.link_file.split('/').pop() : '--'}
+            {item.link_file ? item.link_file.split('/').pop() : '-'}
           </div>
           <div className={styles.date}>{getFileSize(item.size)}</div>
           <div className={styles.detail} style={{ boxOrient: 'vertical' }}>

@@ -47,7 +47,7 @@ export default class HeaderSearch extends PureComponent {
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeout);
+    this.timeout && clearTimeout(this.timeout);
   }
 
   onKeyDown = e => {
@@ -82,6 +82,10 @@ export default class HeaderSearch extends PureComponent {
     //     this.input.focus();
     //   }
     // });
+  };
+
+  resetInput = () => {
+    this.setState({ value: '' });
   };
 
   leaveSearchMode = () => {

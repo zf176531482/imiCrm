@@ -243,3 +243,25 @@ export async function createOpportunity(params) {
     },
   });
 }
+
+export async function editOpportunity(params, id) {
+  return request(`/api/v1/opportunity/${id}/`, {
+    method: 'PATCH',
+    body: {
+      ...params,
+    },
+  });
+}
+
+/**
+ * filter
+ */
+
+export async function queryFilter(params) {
+  return request('/get_data/', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}

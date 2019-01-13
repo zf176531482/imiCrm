@@ -3,6 +3,7 @@ import {
   queryOpportunity,
   queryCompleteValues,
   createOpportunity,
+  editOpportunity,
 } from '@/services/api';
 
 export default {
@@ -71,6 +72,10 @@ export default {
     },
     *input({ payload, callback }, { call }) {
       const response = yield call(createOpportunity, payload);
+      if (callback) callback(response);
+    },
+    *edit({ payload, callback, id }, { call }) {
+      const response = yield call(editOpportunity, payload, id);
       if (callback) callback(response);
     },
   },

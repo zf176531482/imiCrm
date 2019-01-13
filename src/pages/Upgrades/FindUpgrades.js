@@ -4,10 +4,11 @@ import { Row, Col, Card, Form, Button, Divider, Modal, Select } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
-import SelectCheckbox from '@/components/SelectCheckbox';
 import DrawerUpgrades from '@/components/DrawerUpgrades';
+import FilterBar from '@/components/FilterBar';
+import { filterType, DATA_BASE, trim } from '@/utils/constants';
 
-import styles from '../Service/Service.less';
+import styles from '../Contacts/Contacts.less';
 
 const { Option } = Select;
 
@@ -26,51 +27,45 @@ class FindUpgrades extends PureComponent {
     visibleEdit: false,
     selectedItem: {},
     selectedRows: [],
-    formValues: {},
-    filterOptions: [
-      {
-        name: 'Dept',
-        data: [
-          { id: 1, name: 'Executive', checked: true },
-          { id: 2, name: 'Engineering', checked: false },
-        ],
-      },
-      {
-        name: 'Job Title',
-        data: [{ id: 1, name: '22', checked: true }, { id: 2, name: '33', checked: true }],
-      },
-      {
-        name: 'Location',
-        data: [{ id: 1, name: '44', checked: false }, { id: 2, name: '55', checked: false }],
-      },
-    ],
+    filterOptions: {},
+    searchOptions: {},
   };
 
   columns = [
     {
       title: 'Industry',
       dataIndex: 'industry',
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Application',
       dataIndex: 'application',
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Plant Name',
       dataIndex: 'plant_name',
+      render: text => (text && text.trim() ? text : '-'),
+    },
+    {
+      title: 'Plant Type',
+      dataIndex: 'plant_type',
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Product Type',
       dataIndex: 'product_type',
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Maker',
       dataIndex: 'maker',
-      render: text => (text ? text : '--'),
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Upgrade Type',
       dataIndex: 'upgrade_type',
+      render: text => (text && text.trim() ? text : '-'),
     },
     {
       title: 'Operation',
@@ -87,7 +82,6 @@ class FindUpgrades extends PureComponent {
   ];
 
   componentDidMount() {
-    // console.log(this.props);
     const { dispatch } = this.props;
     dispatch({
       type: 'upgrade/opportunity',
@@ -96,23 +90,13 @@ class FindUpgrades extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
+    const { filterOptions, searchOptions } = this.state;
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
-      ...formValues,
-      ...filters,
+      ...filterOptions,
+      ...searchOptions,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
       type: 'upgrade/opportunity',
@@ -121,11 +105,13 @@ class FindUpgrades extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
+    const { dispatch } = this.props;
     this.setState({
-      formValues: {},
+      filterOptions: {},
+      searchOptions: {},
     });
+    this.filterBar.resetFilter();
+    this.filterInput.resetInput();
     dispatch({
       type: 'upgrade/opportunity',
       payload: {},
@@ -140,25 +126,14 @@ class FindUpgrades extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'upgrade/opportunity',
-        payload: values,
-      });
+    const { dispatch } = this.props;
+    const { filterOptions, searchOptions } = this.state;
+    dispatch({
+      type: 'upgrade/opportunity',
+      payload: {
+        ...filterOptions,
+        ...searchOptions,
+      },
     });
   };
 
@@ -166,162 +141,39 @@ class FindUpgrades extends PureComponent {
     this.setState({ visibleEdit: false });
   };
 
-  checkChange = (index, list) => {
-    let { filterOptions } = this.state;
-    filterOptions[index].data = list;
-    this.setState({ filterOptions: filterOptions }, () => {
-      console.log(this.state.filterOptions);
-    });
+  changeFilter = filter => {
+    this.setState({ filterOptions: filter });
   };
 
-  renderFilter = () => {
-    let selects = [];
-    this.state.filterOptions.map((item, index) => {
-      selects.push(
-        <SelectCheckbox
-          key={index}
-          data={item.data}
-          title={item.name}
-          onChange={list => {
-            this.checkChange(index, list);
-          }}
-        />
-      );
-    });
-    return selects;
-  };
-
-  // {
-  //   title: 'Industry',
-  //   dataIndex: 'industry',
-  // },
-  // {
-  //   title: 'Application',
-  //   dataIndex: 'application',
-  // },
-  // {
-  //   title: 'Plant Name',
-  //   dataIndex: 'plant_name',
-  // },
-  // {
-  //   title: 'Product Type',
-  //   dataIndex: 'product_type',
-  // },
-  // {
-  //   title: 'Maker',
-  //   dataIndex: 'maker',
-  //   render: text => (text ? text : '--'),
-  // },
-  // {
-  //   title: 'Upgrade Type ',
-  //   dataIndex: 'upgrade_type',
-  // },
   renderForm() {
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            {/* {this.renderFilter()} */}
-            <Row gutter={16}>
-              <Col span={24}>
-                <Select
-                  style={{ width: 140, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Industry"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 140, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Plant Type"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 140, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Application"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 140, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Product Type"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 140, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Upgrade Type"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-              </Col>
-            </Row>
+      <Form onSubmit={this.handleSearch} layout="inline" style={{ marginBottom: 10 }}>
+        <Row>
+          <Col lg={16} md={24} sm={24}>
+            <FilterBar
+              onRef={ref => (this.filterBar = ref)}
+              data={filterType().opportunity}
+              type={DATA_BASE.OPP}
+              onChange={this.changeFilter}
+            />
           </Col>
           <Col
-            md={12}
+            lg={8}
+            md={24}
             sm={24}
             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
           >
             <HeaderSearch
+              ref={ref => (this.filterInput = ref)}
               defaultOpen={true}
               style={{ marginRight: '20px' }}
               placeholder={'Plant Name'}
               onSearch={value => {
-                console.log('input', value); // eslint-disable-line
+                this.setState({ searchOptions: value ? { plant_name__icontains: value } : {} });
               }}
-              onPressEnter={value => {
-                console.log('enter', value); // eslint-disable-line
-              }}
+              // onPressEnter={value => {
+              //   console.log('enter', value); // eslint-disable-line
+              // }}
             />
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">

@@ -58,7 +58,7 @@ class DetailDrawer extends React.Component {
 
   renderFiles = fileUrl => {
     if (!fileUrl) {
-      return <span style={{ marginLeft: '5px' }}>--</span>;
+      return <span style={{ marginLeft: '5px' }}>-</span>;
     }
 
     return (
@@ -70,7 +70,7 @@ class DetailDrawer extends React.Component {
 
   renderAssets = assets => {
     if (!assets || !assets.length) {
-      return <span style={{ marginLeft: '5px' }}>--</span>;
+      return <span style={{ marginLeft: '5px' }}>-</span>;
     }
 
     let data = assets.map((item, index) => {

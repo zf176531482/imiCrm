@@ -18,16 +18,15 @@ import {
   message,
   Checkbox,
 } from 'antd';
+import DrawerForm from '@/components/DrawerForm';
+import DrawerDetail from '@/components/DrawerDetail';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
-import SelectCheckbox from '@/components/SelectCheckbox';
-import DrawerForm from '@/components/DrawerForm';
-import DrawerDetail from '@/components/DrawerDetail';
-import { assetFilter } from '@/utils/constants';
-import { formatFilter } from '@/utils/utils';
+import FilterBar from '@/components/FilterBar';
+import { filterType, DATA_BASE } from '@/utils/constants';
 
-import styles from './Service.less';
+import styles from '../Contacts/Contacts.less';
 
 const { Option } = Select;
 
@@ -53,8 +52,8 @@ class Service extends PureComponent {
     visibleHistory: false,
     selectedRows: [],
     checkRow: null,
-    formValues: {},
-    filterOptions: assetFilter(),
+    filterOptions: {},
+    searchOptions: {},
   };
 
   columns = [
@@ -133,19 +132,13 @@ class Service extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = formatFilter(this.state.filterOptions);
-
+    const { filterOptions, searchOptions } = this.state;
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
-      ...formValues,
-      ...filters,
+      ...filterOptions,
+      ...searchOptions,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
       type: 'asset/fetch',
@@ -155,7 +148,12 @@ class Service extends PureComponent {
 
   handleFormReset = () => {
     const { dispatch } = this.props;
-    this.setState({ filterOptions: assetFilter() });
+    this.setState({
+      filterOptions: {},
+      searchOptions: {},
+    });
+    this.filterBar.resetFilter();
+    this.filterInput.resetInput();
     dispatch({
       type: 'asset/fetch',
       payload: {},
@@ -172,115 +170,49 @@ class Service extends PureComponent {
     e.preventDefault();
 
     const { dispatch } = this.props;
-
-    const fileters = formatFilter(this.state.filterOptions);
-
+    const { filterOptions, searchOptions } = this.state;
     dispatch({
       type: 'asset/fetch',
       payload: {
-        ...fileters,
+        ...filterOptions,
+        ...searchOptions,
       },
     });
   };
-  checkChange = (index, list) => {
-    let { filterOptions } = this.state;
-    filterOptions[index].data = list;
-    this.setState({ filterOptions: filterOptions }, () => {
-      console.log(this.state.filterOptions);
-    });
-  };
 
-  renderFilter = () => {
-    let selects = [];
-    this.state.filterOptions.map((item, index) => {
-      selects.push(
-        <SelectCheckbox
-          key={index}
-          data={item.data}
-          title={item.name}
-          onChange={list => {
-            this.checkChange(index, list);
-          }}
-        />
-      );
-    });
-    return selects;
+  changeFilter = filter => {
+    this.setState({ filterOptions: filter });
   };
 
   renderForm() {
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            {/* {this.renderFilter()} */}
-            <Row gutter={16}>
-              <Col span={24}>
-                <Select
-                  style={{ width: 120, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Industry"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 120, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Plant Type"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-                <Select
-                  style={{ width: 120, marginRight: '10px' }}
-                  showSearch
-                  placeholder="Plant Name"
-                  optionFilterProp="children"
-                  // onChange={handleChange}
-                  // onFocus={handleFocus}
-                  // onBlur={handleBlur}
-                  filterOption={(input, option) =>
-                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
-                  <Option value="tom">Tom</Option>
-                </Select>
-              </Col>
-            </Row>
+      <Form onSubmit={this.handleSearch} layout="inline" style={{ marginBottom: 10 }}>
+        <Row>
+          <Col lg={14} md={24} sm={24}>
+            <FilterBar
+              onRef={ref => (this.filterBar = ref)}
+              data={filterType().report}
+              type={DATA_BASE.REPORT}
+              onChange={this.changeFilter}
+            />
           </Col>
           <Col
-            md={12}
+            lg={10}
+            md={24}
             sm={24}
             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
           >
             <HeaderSearch
+              ref={ref => (this.filterInput = ref)}
               defaultOpen={true}
               style={{ marginRight: '20px' }}
               placeholder={'Serial'}
               onSearch={value => {
-                console.log('input', value); // eslint-disable-line
+                this.setState({ searchOptions: value ? { serial__icontains: value } : {} });
               }}
-              onPressEnter={value => {
-                console.log('enter', value); // eslint-disable-line
-              }}
+              // onPressEnter={value => {
+              //   console.log('enter', value); // eslint-disable-line
+              // }}
             />
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">

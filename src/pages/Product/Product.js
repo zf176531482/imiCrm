@@ -14,11 +14,13 @@ import {
   Drawer,
   Table,
   Spin,
+  message,
 } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
-import SelectCheckbox from '@/components/SelectCheckbox';
+import FilterBar from '@/components/FilterBar';
+import { filterType, DATA_BASE } from '@/utils/constants';
 import { getFileSize, getHost } from '@/utils/utils';
 import styles from '../Contacts/Contacts.less';
 
@@ -56,24 +58,8 @@ class Product extends PureComponent {
     selectDrawerRows: [],
     selectHistoryRows: [],
     checkRow: null,
-    formValues: {},
-    filterOptions: [
-      {
-        name: 'Dept',
-        data: [
-          { id: 1, name: 'Executive', checked: true },
-          { id: 2, name: 'Engineering', checked: false },
-        ],
-      },
-      {
-        name: 'Job Title',
-        data: [{ id: 1, name: '22', checked: true }, { id: 2, name: '33', checked: true }],
-      },
-      {
-        name: 'Location',
-        data: [{ id: 1, name: '44', checked: false }, { id: 2, name: '55', checked: false }],
-      },
-    ],
+    filterOptions: {},
+    searchOptions: {},
   };
 
   columns = [
@@ -83,7 +69,7 @@ class Product extends PureComponent {
     },
     {
       title: 'Product Type',
-      dataIndex: 'plant_type',
+      dataIndex: 'product_type',
     },
     {
       title: 'Model',
@@ -103,10 +89,15 @@ class Product extends PureComponent {
     },
     {
       title: 'Product Manual',
+      dataIndex: 'manual',
       render: (text, record) => (
         <a
           onClick={() => {
-            this.showDrawer(DRAWER_TYPE.MANUAL, record);
+            if (text) {
+              window.open(getHost() + text);
+            } else {
+              message.warning('No such file');
+            }
           }}
         >
           <Icon type="file-text" className={styles.iconType} />
@@ -197,23 +188,13 @@ class Product extends PureComponent {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
+    const { filterOptions, searchOptions } = this.state;
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
-      ...formValues,
-      ...filters,
+      ...filterOptions,
+      ...searchOptions,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
       type: 'asset/fetch',
@@ -222,11 +203,13 @@ class Product extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
+    const { dispatch } = this.props;
     this.setState({
-      formValues: {},
+      filterOptions: {},
+      searchOptions: {},
     });
+    this.filterBar.resetFilter();
+    this.filterInput.resetInput();
     dispatch({
       type: 'asset/fetch',
       payload: {},
@@ -242,74 +225,51 @@ class Product extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
 
-    const { dispatch, form } = this.props;
+    const { dispatch } = this.props;
+    const { filterOptions, searchOptions } = this.state;
 
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'asset/fetch',
-        payload: values,
-      });
+    dispatch({
+      type: 'asset/fetch',
+      payload: {
+        ...filterOptions,
+        ...searchOptions,
+      },
     });
   };
 
-  checkChange = (index, list) => {
-    let { filterOptions } = this.state;
-    filterOptions[index].data = list;
-    this.setState({ filterOptions: filterOptions }, () => {
-      console.log(this.state.filterOptions);
-    });
-  };
-
-  renderFilter = () => {
-    let selects = [];
-    this.state.filterOptions.map((item, index) => {
-      selects.push(
-        <SelectCheckbox
-          key={index}
-          data={item.data}
-          title={item.name}
-          onChange={list => {
-            this.checkChange(index, list);
-          }}
-        />
-      );
-    });
-    return selects;
+  changeFilter = filter => {
+    this.setState({ filterOptions: filter });
   };
 
   renderForm() {
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            {this.renderFilter()}
+      <Form onSubmit={this.handleSearch} layout="inline" style={{ marginBottom: 10 }}>
+        <Row>
+          <Col lg={16} md={24} sm={24}>
+            <FilterBar
+              onRef={ref => (this.filterBar = ref)}
+              data={filterType().asset}
+              type={DATA_BASE.ASSET}
+              onChange={this.changeFilter}
+            />
           </Col>
           <Col
-            md={12}
+            lg={8}
+            md={24}
             sm={24}
             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
           >
             <HeaderSearch
+              ref={ref => (this.filterInput = ref)}
               defaultOpen={true}
               style={{ marginRight: '20px' }}
               placeholder={'Serial'}
               onSearch={value => {
-                console.log('input', value); // eslint-disable-line
+                this.setState({ searchOptions: value ? { serial__icontains: value } : {} });
               }}
-              onPressEnter={value => {
-                console.log('enter', value); // eslint-disable-line
-              }}
+              // onPressEnter={value => {
+              //   console.log('enter', value); // eslint-disable-line
+              // }}
             />
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
@@ -489,7 +449,7 @@ class Product extends PureComponent {
 
     const content = (
       <Row type="flex" align="middle">
-        <Col span={12}>
+        <Col span={24}>
           <h1 style={{ margin: 0, fontSize: '26px' }}>Product & Asset Information</h1>
         </Col>
         {/* <Col

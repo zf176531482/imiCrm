@@ -107,9 +107,10 @@ export default [
         authority: ['admin'], //配置准入权限,可以配置多个角色
       },
       {
-        name: 'Utilities', //菜单名字
+        name: 'Utilities ( No functionality )', //菜单名字
         icon: 'icon-tool_brief', //图标
         path: '/utilities', //文件夹
+        disabled: true,
         component: './Utilities/Utilities', //文件名称
         authority: ['admin'], //配置准入权限,可以配置多个角色
       },

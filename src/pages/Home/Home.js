@@ -18,7 +18,7 @@ class Home extends Component {
 
   handleClick = link => {
     if (link == '/support') {
-      window.location.href = 'skype:10086?call';
+      window.location.href = 'skype:1?call';
     } else {
       router.push(link);
     }
@@ -95,11 +95,13 @@ class Home extends Component {
             md={6}
             className={`${styles.colContainer} ${styles.col}`}
             onClick={() => {
-              this.handleClick('/utilities');
+              // this.handleClick('/utilities');
             }}
           >
             <span className={`${styles.icon} icon-image2vector-6`} />
-            <div className={styles.text}>Utilities</div>
+            <div className={styles.text}>
+              Utilities <span style={{ fontSize: '15px' }}>(No functionality)</span>
+            </div>
           </Col>
         </Row>
       </div>

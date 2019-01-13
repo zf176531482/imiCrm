@@ -4,10 +4,8 @@ import { Row, Col, Card, Form, Icon, Button, Dropdown, Menu, Modal, message, Div
 import StandardTable from '@/components/StandardTable';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import HeaderSearch from '@/components/HeaderSearch';
-import SelectCheckbox from '@/components/SelectCheckbox';
-import { contactFilter } from '@/utils/constants';
-import { formatFilter } from '@/utils/utils';
-import { FormattedMessage, formatMessage } from 'umi/locale';
+import FilterBar from '@/components/FilterBar';
+import { filterType, DATA_BASE } from '@/utils/constants';
 import styles from './Contacts.less';
 
 const getValue = obj =>
@@ -22,12 +20,9 @@ const getValue = obj =>
 @Form.create()
 class Contacts extends React.Component {
   state = {
-    modalVisible: false,
-    updateModalVisible: false,
     selectedRows: [],
-    formValues: {},
-    stepFormValues: {},
-    filterOptions: contactFilter(),
+    filterOptions: {},
+    searchOptions: {},
   };
 
   columns = [
@@ -39,62 +34,33 @@ class Contacts extends React.Component {
     {
       title: 'Dept',
       dataIndex: 'dept',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
     {
       title: 'Job Title',
       dataIndex: 'job_title',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
     {
       title: 'Phone Number',
       dataIndex: 'phonenumber',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
     {
       title: 'Cell Phone',
       dataIndex: 'cell_phone',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
     {
       title: 'Loaction',
       dataIndex: 'location',
-      render: text => (text ? text : '--'),
+      render: text => (text ? text : '-'),
     },
-    // {
-    //   title: 'Operation',
-    //   render: (text, record) => (
-    //     <a>
-    //       <Icon type="ellipsis" style={{ transform: 'rotate(90deg)', fontSize: '18px' }} />
-    //     </a>
-    //     // <Fragment>
-    //     //   {/* <a onClick={() => this.handleUpdateModalVisible(true, record)}>Edit</a> */}
-    //     //   <a onClick={() => {}}>Edit</a>
-    //     //   <Divider type="vertical" />
-    //     //   <a
-    //     //     onClick={() => {
-    //     //       Modal.confirm({
-    //     //         title: 'Do you want to delete these items?',
-    //     //         content: 'When clicked the OK button, this dialog will be closed after 1 second',
-    //     //         onOk() {
-    //     //           return new Promise((resolve, reject) => {
-    //     //             setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-    //     //           }).catch(() => console.log('Oops errors!'));
-    //     //         },
-    //     //         onCancel() {},
-    //     //       });
-    //     //     }}
-    //     //   >
-    //     //     Delete
-    //     //   </a>
-    //     // </Fragment>
-    //   ),
-    // },
   ];
 
   componentDidMount() {
@@ -106,18 +72,13 @@ class Contacts extends React.Component {
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = formatFilter(this.state.filterOptions);
-
+    const { filterOptions, searchOptions } = this.state;
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
-      ...filters,
+      ...filterOptions,
+      ...searchOptions,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
       type: 'contact/fetch',
@@ -127,7 +88,12 @@ class Contacts extends React.Component {
 
   handleFormReset = () => {
     const { dispatch } = this.props;
-    this.setState({ filterOptions: contactFilter() });
+    this.setState({
+      filterOptions: {},
+      searchOptions: {},
+    });
+    this.filterBar.resetFilter();
+    this.filterInput.resetInput();
     dispatch({
       type: 'contact/fetch',
       payload: {},
@@ -143,63 +109,50 @@ class Contacts extends React.Component {
   handleSearch = e => {
     e.preventDefault();
 
-    const { dispatch, form } = this.props;
-
-    const fileters = formatFilter(this.state.filterOptions);
-
+    const { dispatch } = this.props;
+    const { filterOptions, searchOptions } = this.state;
     dispatch({
       type: 'contact/fetch',
       payload: {
-        ...fileters,
+        ...filterOptions,
+        ...searchOptions,
       },
     });
   };
 
-  checkChange = (index, list) => {
-    let { filterOptions } = this.state;
-    filterOptions[index].data = list;
-    this.setState({ filterOptions: filterOptions });
+  changeFilter = filter => {
+    this.setState({ filterOptions: filter });
   };
-
-  renderFilter = () => {
-    let { filterOptions } = this.state;
-    let selects = filterOptions.map((item, index) => {
-      return (
-        <SelectCheckbox
-          key={index}
-          data={item.data}
-          title={item.name}
-          onChange={list => {
-            this.checkChange(index, list);
-          }}
-        />
-      );
-    });
-    return selects;
-  };
-
+  // gutter={{ md: 8, lg: 24, xl: 48 }}
   renderForm() {
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={12} sm={24}>
-            {this.renderFilter()}
+      <Form onSubmit={this.handleSearch} layout="inline" style={{ marginBottom: 10 }}>
+        <Row>
+          <Col lg={14} md={24} sm={24}>
+            <FilterBar
+              onRef={ref => (this.filterBar = ref)}
+              data={filterType().contact}
+              type={DATA_BASE.CONTACT}
+              onChange={this.changeFilter}
+            />
           </Col>
           <Col
-            md={12}
+            lg={10}
+            md={24}
             sm={24}
             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}
           >
             <HeaderSearch
+              ref={ref => (this.filterInput = ref)}
               defaultOpen={true}
               style={{ marginRight: '20px' }}
               placeholder={'First Name'}
               onSearch={value => {
-                console.log('input', value); // eslint-disable-line
+                this.setState({ searchOptions: value ? { first_name__icontains: value } : {} });
               }}
-              onPressEnter={value => {
-                console.log('enter', value); // eslint-disable-line
-              }}
+              // onPressEnter={value => {
+              //   console.log('enter', value); // eslint-disable-line
+              // }}
             />
             <span className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
@@ -224,7 +177,7 @@ class Contacts extends React.Component {
 
     const content = (
       <Row type="flex" align="middle">
-        <Col span={12}>
+        <Col span={24}>
           <h1 style={{ margin: 0, fontSize: '26px' }}>Contacts</h1>
         </Col>
         {/* <Col

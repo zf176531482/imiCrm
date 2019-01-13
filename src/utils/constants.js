@@ -1,156 +1,182 @@
-export const INDUSTRY = [
-  'Fossil',
-  'Oil & Gas',
-  'Nuclear',
-  'Desalination',
-  'Iron & Steel',
-  'Non-Industrial',
-  'Petrochemical',
-  'Power',
-  'Other',
-];
+export const PRODUCT_TYPE = ['Control Valve', 'BTG', 'Turbine Bypass System', 'Attemporator'];
 
-export const PLANT_TYPE = [
-  'Clean Water',
-  'Biomass',
-  'Chemical',
-  'Coal',
-  'Combined Cycle Power',
-  'Combined Heat & Power',
-  'Downstream',
-  'Fertiliser',
-  'Glass',
-  'Iron & Steel',
-  'LNG',
-  'Marine',
-  'Midstream',
-  'Mining',
-  'Non-Industrial',
-  'Nuclear',
-  'Oil',
-  'Oil & Gas',
-  'Other',
-  'Paper & Pulp',
-  'Plastic',
-  'Refining',
-  'Sanitation',
-  'Solar',
-  'Sugar',
-  'Upstream',
-  'Waste',
-  '--',
-];
-
-export const PRODUCT_TYPE = ['Control Valve', 'BTG'];
-
-export function contactFilter() {
-  return [
-    {
-      name: 'Dept',
-      key: 'dept',
-      data: [
-        { name: 'AFM Inside Sales' },
-        { name: 'Aftermarket Engineer' },
-        { name: 'Aftermarket Outside Sales' },
-        { name: 'Engineering' },
-        { name: 'Executive' },
-        { name: 'Operation' },
-        { name: 'Service Center' },
-      ],
-    },
-    {
-      name: 'Job Title',
-      key: 'job_title',
-      data: [
-        { name: 'AFM Initiatives Manager' },
-        { name: 'Applicationl Engineer' },
-        { name: 'China MD' },
-        { name: 'Commissioning Engineer' },
-        { name: 'Design Engineer' },
-        { name: 'Designer' },
-        { name: 'Field Service Engineer' },
-        { name: 'Field Service Specialist' },
-        { name: 'Outside Sales Engineer' },
-        { name: 'Sales Engineer' },
-        { name: 'Sr. Application Engineer' },
-        { name: 'Sr. Designer' },
-      ],
-    },
-    {
-      name: 'Location',
-      key: 'location',
-      data: [
-        { name: 'Beijing' },
-        { name: 'Jinan' },
-        { name: 'Langfang' },
-        { name: 'Shanghai' },
-        { name: 'Wuhan' },
-      ],
-    },
-  ];
+export function trim(str) {
+  return str.replace(/(^\s*)|(\s*$)/g, '');
 }
 
-export function assetFilter() {
+export const OPPORTUNITY_STATUS = {
+  0: 'Proposal',
+  1: 'Sales Lead',
+  2: 'Negotiation',
+  3: 'Qualification',
+};
+
+export const VALUE_TYPE = {
+  application: 'Application',
+  maker: 'Maker',
+  model: 'Model',
+  product_type: 'Product Type',
+  success_case_no: 'Success Case No',
+  typical_problem: 'Typical Problem',
+};
+
+export const DATA_BASE = {
+  CONTACT: 'contact',
+  ASSET: 'asset',
+  REPORT: 'asset',
+  OPP: 'opp',
+  VALUES: 'complete_values',
+  PLANT_INPUT: 'plant_input',
+};
+
+export const filterType = () => {
+  return {
+    contact: [
+      {
+        name: 'Dept',
+        key: 'dept',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Job Title',
+        key: 'job_title',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Location',
+        key: 'location',
+        options: [],
+        selectValue: '',
+      },
+    ],
+    asset: [
+      {
+        name: 'Industry',
+        key: 'industry',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Plant Name',
+        key: 'plant_name',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Application',
+        key: 'application',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Product Type',
+        key: 'product_type',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Model',
+        key: 'model',
+        options: [],
+        selectValue: '',
+      },
+    ],
+    report: [
+      {
+        name: 'Industry',
+        key: 'industry',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Plant Type',
+        key: 'plant_type',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Plant Name',
+        key: 'plant_name',
+        options: [],
+        selectValue: '',
+      },
+    ],
+    opportunity: [
+      {
+        name: 'Industry',
+        key: 'industry',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Plant Type',
+        key: 'plant_type',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Application',
+        key: 'application',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Product Type',
+        key: 'product_type',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Upgrade Type',
+        key: 'upgrade_type',
+        options: [],
+        selectValue: '',
+      },
+    ],
+    values: [
+      {
+        name: 'Application',
+        key: 'application',
+        options: [],
+        selectValue: '',
+      },
+      {
+        name: 'Product Type',
+        key: 'product_type',
+        options: [],
+        selectValue: '',
+      },
+    ],
+  };
+};
+
+export const oppCreatType = () => {
   return [
     {
       name: 'Industry',
       key: 'industry',
-      data: [
-        { name: 'AFM Inside Sales' },
-        { name: 'Aftermarket Engineer' },
-        { name: 'Aftermarket Outside Sales' },
-        { name: 'Engineering' },
-        { name: 'Executive' },
-        { name: 'Operation' },
-        { name: 'Service Center' },
-      ],
-    },
-    {
-      name: 'Plant Name',
-      key: 'plant_name',
-      data: [
-        { name: 'AFM Initiatives Manager' },
-        { name: 'Applicationl Engineer' },
-        { name: 'China MD' },
-        { name: 'Commissioning Engineer' },
-        { name: 'Design Engineer' },
-        { name: 'Designer' },
-        { name: 'Field Service Engineer' },
-        { name: 'Field Service Specialist' },
-        { name: 'Outside Sales Engineer' },
-        { name: 'Sales Engineer' },
-        { name: 'Sr. Application Engineer' },
-        { name: 'Sr. Designer' },
-      ],
+      options: [],
+      selectValue: '',
     },
     {
       name: 'Plant Type',
       key: 'plant_type',
-      data: [
-        { name: 'AFM Initiatives Manager' },
-        { name: 'Applicationl Engineer' },
-        { name: 'China MD' },
-        { name: 'Commissioning Engineer' },
-        { name: 'Design Engineer' },
-        { name: 'Designer' },
-        { name: 'Field Service Engineer' },
-        { name: 'Field Service Specialist' },
-        { name: 'Outside Sales Engineer' },
-        { name: 'Sales Engineer' },
-        { name: 'Sr. Application Engineer' },
-        { name: 'Sr. Designer' },
-      ],
+      options: [],
+      selectValue: '',
+    },
+    {
+      name: 'Application',
+      key: 'application',
+      options: [],
+      selectValue: '',
     },
     {
       name: 'Product Type',
       key: 'product_type',
-      data: [
-        { name: 'Beijing' },
-        { name: 'Jinan' },
-        { name: 'Langfang' },
-        { name: 'Shanghai' },
-        { name: 'Wuhan' },
-      ],
+      options: ['Control Valve', 'BTG', 'Turbine Bypass System', 'Attemporator'],
+      selectValue: '',
     },
   ];
-}
+};
