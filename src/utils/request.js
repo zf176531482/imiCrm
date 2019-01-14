@@ -42,9 +42,9 @@ const checkStatus = response => {
     return response;
   }
 
-  // if (response.status === 400) {
-  //   return response;
-  // }
+  if (response.status == 400) {
+    return response;
+  }
 
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
