@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Card, Form, Button, Divider, Modal, Select } from 'antd';
@@ -18,7 +19,8 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ upgrade, loading }) => ({
+@connect(({ login, upgrade, loading }) => ({
+  login,
   upgrade,
   loading: loading.effects['upgrade/opportunity'],
 }))
@@ -89,18 +91,23 @@ class MyUpgrades extends PureComponent {
   ];
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, login } = this.props;
+
     dispatch({
       type: 'upgrade/opportunity',
+      payload: {
+        contact_email: login.user.email,
+      },
     });
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch, login } = this.props;
     const { filterOptions, searchOptions } = this.state;
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
+      contact_email: login.user.email,
       ...filterOptions,
       ...searchOptions,
     };
@@ -112,7 +119,7 @@ class MyUpgrades extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { dispatch } = this.props;
+    const { dispatch, login } = this.props;
     this.setState({
       filterOptions: {},
       searchOptions: {},
@@ -121,7 +128,9 @@ class MyUpgrades extends PureComponent {
     this.filterInput.resetInput();
     dispatch({
       type: 'upgrade/opportunity',
-      payload: {},
+      payload: {
+        contact_email: login.user.email,
+      },
     });
   };
 
@@ -133,11 +142,12 @@ class MyUpgrades extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-    const { dispatch } = this.props;
+    const { dispatch, login } = this.props;
     const { filterOptions, searchOptions } = this.state;
     dispatch({
       type: 'upgrade/opportunity',
       payload: {
+        contact_email: login.user.email,
         ...filterOptions,
         ...searchOptions,
       },
