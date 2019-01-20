@@ -13,8 +13,10 @@ export const OPPORTUNITY_STATUS = {
 
 export const VALUE_TYPE = {
   application: 'Application',
+  industry: 'Industry',
   maker: 'Maker',
   model: 'Model',
+  plant_type: 'Plant Type',
   product_type: 'Product Type',
   success_case_no: 'Success Case No',
   typical_problem: 'Typical Problem',
@@ -33,7 +35,7 @@ export const filterType = () => {
   return {
     contact: [
       {
-        name: 'Dept',
+        name: 'Deptment',
         key: 'dept',
         options: [],
         selectValue: '',

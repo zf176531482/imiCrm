@@ -2,13 +2,14 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage, formatMessage } from 'umi/locale';
 import { Spin, Tag, Menu, Icon, Avatar, Tooltip } from 'antd';
 import moment from 'moment';
+import { getHost } from '@/utils/utils';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
-import avatar from '../../assets/user.jpg';
+import avatar from '../../assets/user.png';
 
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
@@ -177,8 +178,8 @@ export default class GlobalHeaderRight extends PureComponent {
               </div>
               <Avatar
                 size="large"
-                className={styles.avatar}
-                src={currentUser.avatar ? currentUser.avatar : avatar}
+                className={currentUser.avatar ? styles.avatarLayout : styles.avatar}
+                src={currentUser.avatar ? `${getHost()}/media/${currentUser.avatar}` : avatar}
                 alt="avatar"
               />
             </span>

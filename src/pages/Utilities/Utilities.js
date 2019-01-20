@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Row, Col } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import styles from './Utilities.less';
 
 class Utilities extends PureComponent {
   state = {};
@@ -14,7 +15,27 @@ class Utilities extends PureComponent {
       </Row>
     );
 
-    return <PageHeaderWrapper content={content} />;
+    return (
+      <PageHeaderWrapper content={content}>
+        <Row className={styles.topContainer}>
+          <img src={require('../../assets/comingsoon.png')} alt="" />
+          <h1>October&nbsp;&nbsp;2019</h1>
+        </Row>
+        <Row type="flex" align="bottom" className={styles.bottomContaier}>
+          <Col span={12}>
+            <ul className={styles.listInfo}>
+              <li>Product Information / Catalogues</li>
+              <li>Authorised Agent & Distributor List</li>
+              <li>Promotional & Training Video</li>
+              <li>Company Newsletters</li>
+            </ul>
+          </Col>
+          <Col span={12}>
+            <h1>But that&acute;s not all..</h1>
+          </Col>
+        </Row>
+      </PageHeaderWrapper>
+    );
   }
 }
 

@@ -32,6 +32,7 @@ class CaseStudies extends PureComponent {
   };
 
   renderCardList = cases => {
+    console.log(cases);
     let data = cases.map((item, index) => {
       return (
         <Card
@@ -50,12 +51,12 @@ class CaseStudies extends PureComponent {
             />
           }
         >
-          <div className={styles.title}>
+          {/* <div className={styles.title}>
             {item.link_file ? item.link_file.split('/').pop() : '-'}
           </div>
-          <div className={styles.date}>{getFileSize(item.size)}</div>
-          <div className={styles.detail} style={{ boxOrient: 'vertical' }}>
-            {item.header}
+          <div className={styles.date}>{getFileSize(item.size)}</div> */}
+          <div className={styles.title} style={{ boxOrient: 'vertical' }}>
+            {item.problem_description}
           </div>
         </Card>
       );
@@ -69,7 +70,7 @@ class CaseStudies extends PureComponent {
     } = this.props;
     const content = (
       <Row>
-        <Col span={3}>
+        <Col span={24}>
           <h1 style={{ margin: 0, fontSize: '26px' }}> Case Studies </h1>
         </Col>
       </Row>

@@ -159,7 +159,18 @@ class MyUpgrades extends PureComponent {
   };
 
   changeFilter = filter => {
-    this.setState({ filterOptions: filter });
+    this.setState({ filterOptions: filter }, () => {
+      const { dispatch, login } = this.props;
+      const { filterOptions, searchOptions } = this.state;
+      dispatch({
+        type: 'upgrade/opportunity',
+        payload: {
+          contact_email: login.user.email,
+          ...filterOptions,
+          ...searchOptions,
+        },
+      });
+    });
   };
 
   renderForm() {
@@ -247,7 +258,12 @@ class MyUpgrades extends PureComponent {
             />
           </div>
         </Card>
-        <DrawerUpgrades data={selectedItem} visible={visibleEdit} onClose={this.onClose} />
+        <DrawerUpgrades
+          my={true}
+          data={selectedItem}
+          visible={visibleEdit}
+          onClose={this.onClose}
+        />
         <DrawerInput visible={visibleInput} onClose={this.onClose} />
       </PageHeaderWrapper>
     );

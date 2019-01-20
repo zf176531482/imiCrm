@@ -137,11 +137,22 @@ class ManualSearch extends PureComponent {
   };
 
   changeFilter = filter => {
-    this.setState({ filterOptions: filter });
+    this.setState({ filterOptions: filter }, () => {
+      const { dispatch } = this.props;
+      const { filterOptions, searchOptions } = this.state;
+      dispatch({
+        type: 'upgrade/completeValues',
+        payload: {
+          ...filterOptions,
+          ...searchOptions,
+        },
+      });
+    });
   };
 
   renderRecord = () => {
     const { selectedRecord } = this.state;
+    console.log(selectedRecord);
     const list = Object.keys(selectedRecord)
       .filter(item => item != 'id' && item != 'resource_uri')
       .map(item => {

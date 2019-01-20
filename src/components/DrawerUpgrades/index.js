@@ -37,7 +37,8 @@ const UPGRADE_TYPE = {
   UGC: '#099447',
 };
 
-@connect(({ upgrade, loading }) => ({
+@connect(({ login, upgrade, loading }) => ({
+  login,
   upgrade,
   loading: loading.effects['upgrade/edit'],
 }))
@@ -108,7 +109,7 @@ class UpgradesDrawer extends React.Component {
   handleSubmit = () => {
     const { maker, model, problem, solution, data, checkValueIndex } = this.state;
     if (maker && model && problem && solution) {
-      const { dispatch } = this.props;
+      const { dispatch, my, login } = this.props;
       dispatch({
         type: 'upgrade/edit',
         id: data.id,
@@ -126,6 +127,11 @@ class UpgradesDrawer extends React.Component {
             message.success('Edit success');
             dispatch({
               type: 'upgrade/opportunity',
+              payload: my
+                ? {
+                    contact_email: login.user.email,
+                  }
+                : {},
             });
           }
         },

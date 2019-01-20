@@ -19,7 +19,8 @@ import StandardTable from '@/components/StandardTable';
 import styles from './index.less';
 import { oppCreatType, DATA_BASE } from '@/utils/constants';
 
-@connect(({ filter, upgrade, loading }) => ({
+@connect(({ login, filter, upgrade, loading }) => ({
+  login,
   filter,
   upgrade,
   loading: loading.effects['upgrade/input'],
@@ -47,7 +48,7 @@ class InputDrawer extends React.Component {
     this.props.form.validateFields((err, values) => {
       console.log(values);
       if (!err) {
-        const { dispatch } = this.props;
+        const { dispatch, login } = this.props;
         dispatch({
           type: 'upgrade/input',
           payload: {
@@ -68,6 +69,9 @@ class InputDrawer extends React.Component {
               message.success('Create success');
               dispatch({
                 type: 'upgrade/opportunity',
+                payload: {
+                  contact_email: login.user.email,
+                },
               });
             }
           },

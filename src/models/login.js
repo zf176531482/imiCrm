@@ -19,7 +19,11 @@ export default {
       const response = yield call(fakeAccountLogin, payload);
 
       if (response.status === 'OK') {
-        response.currentAuthority = 'admin';
+        if (response.user && response.user.sfdc_account) {
+          response.currentAuthority = 'user';
+        } else {
+          response.currentAuthority = 'admin';
+        }
         yield put({
           type: 'changeLoginStatus',
           payload: response,

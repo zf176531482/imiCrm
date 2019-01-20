@@ -44,17 +44,17 @@ class Contacts extends React.Component {
     {
       title: 'Phone Number',
       dataIndex: 'phonenumber',
-      render: text => (text ? text : '-'),
+      render: text => (text ? <a href={`sip:${text}`}>{text}</a> : '-'),
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      render: text => (text ? text : '-'),
+      render: text => (text ? <a href={`mailto:${text}`}>{text}</a> : '-'),
     },
     {
       title: 'Cell Phone',
       dataIndex: 'cell_phone',
-      render: text => (text ? text : '-'),
+      render: text => (text ? <a href={`sip:${text}`}>{text}</a> : '-'),
     },
     {
       title: 'Loaction',
@@ -121,7 +121,17 @@ class Contacts extends React.Component {
   };
 
   changeFilter = filter => {
-    this.setState({ filterOptions: filter });
+    this.setState({ filterOptions: filter }, () => {
+      const { dispatch } = this.props;
+      const { filterOptions, searchOptions } = this.state;
+      dispatch({
+        type: 'contact/fetch',
+        payload: {
+          ...filterOptions,
+          ...searchOptions,
+        },
+      });
+    });
   };
   // gutter={{ md: 8, lg: 24, xl: 48 }}
   renderForm() {

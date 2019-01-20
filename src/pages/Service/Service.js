@@ -41,7 +41,8 @@ const getValue = obj =>
     .join(',');
 
 /* eslint react/no-multi-comp:0 */
-@connect(({ asset, loading }) => ({
+@connect(({ login, asset, loading }) => ({
+  currentUser: login.user,
   asset,
   loading: loading.models.asset,
 }))
@@ -104,9 +105,13 @@ class Service extends PureComponent {
   ];
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     dispatch({
       type: 'asset/fetch',
+      payload: {
+        ...user,
+      },
     });
   }
 
@@ -131,13 +136,15 @@ class Service extends PureComponent {
   };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
     const { filterOptions, searchOptions } = this.state;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
       ...filterOptions,
       ...searchOptions,
+      ...user,
     };
 
     dispatch({
@@ -147,7 +154,8 @@ class Service extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     this.setState({
       filterOptions: {},
       searchOptions: {},
@@ -156,7 +164,9 @@ class Service extends PureComponent {
     this.filterInput.resetInput();
     dispatch({
       type: 'asset/fetch',
-      payload: {},
+      payload: {
+        ...user,
+      },
     });
   };
 
@@ -169,19 +179,33 @@ class Service extends PureComponent {
   handleSearch = e => {
     e.preventDefault();
 
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
     const { filterOptions, searchOptions } = this.state;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     dispatch({
       type: 'asset/fetch',
       payload: {
         ...filterOptions,
         ...searchOptions,
+        ...user,
       },
     });
   };
 
   changeFilter = filter => {
-    this.setState({ filterOptions: filter });
+    this.setState({ filterOptions: filter }, () => {
+      const { dispatch, currentUser } = this.props;
+      const { filterOptions, searchOptions } = this.state;
+      const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
+      dispatch({
+        type: 'asset/fetch',
+        payload: {
+          ...filterOptions,
+          ...searchOptions,
+          ...user,
+        },
+      });
+    });
   };
 
   renderForm() {

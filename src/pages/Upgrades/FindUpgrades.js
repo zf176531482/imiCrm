@@ -17,7 +17,8 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 /* eslint react/no-multi-comp:0 */
-@connect(({ upgrade, loading }) => ({
+@connect(({ login, upgrade, loading }) => ({
+  currentUser: login.user,
   upgrade,
   loading: loading.effects['upgrade/opportunity'],
 }))
@@ -82,20 +83,26 @@ class FindUpgrades extends PureComponent {
   ];
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     dispatch({
       type: 'upgrade/opportunity',
+      payload: {
+        ...user,
+      },
     });
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
     const { filterOptions, searchOptions } = this.state;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     const params = {
       offset: (pagination.current - 1) * pagination.pageSize,
       limit: pagination.pageSize,
       ...filterOptions,
       ...searchOptions,
+      ...user,
     };
 
     dispatch({
@@ -105,7 +112,8 @@ class FindUpgrades extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     this.setState({
       filterOptions: {},
       searchOptions: {},
@@ -114,7 +122,9 @@ class FindUpgrades extends PureComponent {
     this.filterInput.resetInput();
     dispatch({
       type: 'upgrade/opportunity',
-      payload: {},
+      payload: {
+        ...user,
+      },
     });
   };
 
@@ -126,13 +136,15 @@ class FindUpgrades extends PureComponent {
 
   handleSearch = e => {
     e.preventDefault();
-    const { dispatch } = this.props;
+    const { dispatch, currentUser } = this.props;
     const { filterOptions, searchOptions } = this.state;
+    const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
     dispatch({
       type: 'upgrade/opportunity',
       payload: {
         ...filterOptions,
         ...searchOptions,
+        ...user,
       },
     });
   };
@@ -142,7 +154,19 @@ class FindUpgrades extends PureComponent {
   };
 
   changeFilter = filter => {
-    this.setState({ filterOptions: filter });
+    this.setState({ filterOptions: filter }, () => {
+      const { dispatch, currentUser } = this.props;
+      const { filterOptions, searchOptions } = this.state;
+      const user = currentUser.sfdc_account ? { sfdc_account: currentUser.sfdc_account } : {};
+      dispatch({
+        type: 'upgrade/opportunity',
+        payload: {
+          ...filterOptions,
+          ...searchOptions,
+          ...user,
+        },
+      });
+    });
   };
 
   renderForm() {
