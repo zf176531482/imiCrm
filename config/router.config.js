@@ -77,7 +77,7 @@ export default [
           },
           {
             path: '/upgrades/case',
-            name: 'Case Studies',
+            name: 'Upgrade Packages',
             component: './Upgrades/CaseStudies',
             authority: ['admin', 'user'],
           },

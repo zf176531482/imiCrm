@@ -56,8 +56,12 @@ class FormDrawer extends React.Component {
   };
 
   uploadFile = res => {
-    console.log(res.id);
-    console.log(this.state.fileList[0].originFileObj);
+    if (!this.state.fileList.length) {
+      message.success('Create success');
+      this.onClose();
+      return;
+    }
+
     const { dispatch } = this.props;
     let formData = new FormData();
     formData.append('service_id', res.id);
@@ -337,7 +341,7 @@ class FormDrawer extends React.Component {
                 {getFieldDecorator('attachreport', {
                   valuePropName: 'fileList',
                   getValueFromEvent: this.normFile,
-                  rules: [{ required: true, message: 'Please choose the attach report' }],
+                  rules: [{ required: false, message: 'Please choose the attach report' }],
                 })(
                   <Upload beforeUpload={beforeUpload}>
                     <Button type="dashed" disabled={!!fileList.length}>

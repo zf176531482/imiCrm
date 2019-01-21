@@ -23,7 +23,6 @@ class CaseStudies extends PureComponent {
   }
 
   linkFile = item => {
-    console.log(item);
     if (!item.link_file) {
       return;
     }
@@ -32,7 +31,6 @@ class CaseStudies extends PureComponent {
   };
 
   renderCardList = cases => {
-    console.log(cases);
     let data = cases.map((item, index) => {
       return (
         <Card
@@ -71,7 +69,7 @@ class CaseStudies extends PureComponent {
     const content = (
       <Row>
         <Col span={24}>
-          <h1 style={{ margin: 0, fontSize: '26px' }}> Case Studies </h1>
+          <h1 style={{ margin: 0, fontSize: '26px' }}>Upgrade Packages</h1>
         </Col>
       </Row>
     );

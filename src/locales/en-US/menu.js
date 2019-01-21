@@ -1,7 +1,7 @@
 export default {
   'menu.Upgrades.Find Upgrade Opportunities': 'Find Upgrade Opportunities',
   'menu.Upgrades.My Upgrade List & Status': 'My Upgrade List & Status',
-  'menu.Upgrades.Case Studies': 'Case Studies',
+  'menu.Upgrades.Upgrade Packages': 'Upgrade Packages',
   'menu.Upgrades.Manual Search': 'Manual Search',
   'menu.Upgrades.Manual Search & Input': 'Manual Search & Input',
   'menu.Upgrades.Manual Search & Input.Manual Search': 'Manual Search',
