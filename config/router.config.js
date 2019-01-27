@@ -26,13 +26,13 @@ export default [
         component: './Home/Home', //文件名称
         authority: ['admin', 'user'], //配置准入权限,可以配置多个角色
       },
-      // {
-      //   name: 'Support',  //菜单名字
-      //   icon: 'icon-kefu-copy',       //图标
-      //   path: '/support',       //文件夹
-      //   component: './Support/Support', //文件名称
-      //   authority: ['admin'],//配置准入权限,可以配置多个角色
-      // },
+      {
+        name: 'Support', //菜单名字
+        icon: 'icon-kefu-copy', //图标
+        path: '/support', //文件夹
+        component: './Support/Support', //文件名称
+        authority: ['admin'], //配置准入权限,可以配置多个角色
+      },
       {
         name: 'Contacts', //菜单名字
         icon: 'icon-user-copy', //图标
