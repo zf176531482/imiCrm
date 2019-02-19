@@ -1,0 +1,71 @@
+.container {
+    background-color: rgba(33, 33, 33, .4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 1;
+    z-index: 9999;
+}
+
+.stepContainer {
+    background: yellow;
+}
+.popperContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(110%, -20%);
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 400px;
+}
+
+.popperImg {
+    width: 50px;
+    background: red;
+    margin-right: 20px;
+}
+
+.popperContent {
+    flex: 1;
+}
+
+.popperClose {
+    font-size: 20px;
+    position: absolute;
+    top: 35px;
+    right: 15px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 15px;
+}
+.popperSteps {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    span {
+        width: 8px;
+        height: 8px;
+        border-radius: 8px;
+        background: red;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        transition: all .5s;
+    }
+}
+
+.active {
+    width: 16px !important
+}
+.popperStepContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

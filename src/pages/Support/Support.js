@@ -1,140 +1,128 @@
 import React, { PureComponent } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import styles from './Support.less';
 
+const STEP_TYPE = {
+    PREV: 0,
+    NEXT: 1
+}
 class Support extends PureComponent {
   state = {
-    tree: [
+    activeKey: '1',
+    stepData: [
       {
-        name: 'RootVDC',
         id: '1',
-        closeIcon: null,
-        openIcon: null,
-        slot: null,
-        active: true,
-        open: true,
-        children: [
-          {
-            name: '华云数据集团',
-            id: '2',
-            closeIcon: null,
-            openIcon: null,
-            slot: null,
-            active: false,
-            open: true,
-            children: [
-              {
-                name: '研发部门',
-                id: '3',
-                closeIcon: null,
-                openIcon: null,
-                slot: null,
-                active: false,
-                open: true,
-                children: [
-                  {
-                    name: '研发分部门',
-                    id: '4',
-                    closeIcon: null,
-                    openIcon: null,
-                    slot: null,
-                    active: false,
-                    open: true,
-                    children: null,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: '华云上海分公司',
-            id: '5',
-            closeIcon: null,
-            openIcon: null,
-            slot: null,
-            active: false,
-            open: false,
-            children: [
-              {
-                name: '市场部',
-                id: '6',
-                closeIcon: null,
-                openIcon: null,
-                slot: null,
-                active: false,
-                open: true,
-                children: null,
-              },
-            ],
-          },
-        ],
+        title: '全新的自定义菜单导航1',
+        content: '产品菜单及云环境的选择从顶部移至左侧，鼠标点击按钮可展开列表1。',
+        img: '111',
+        position: {top: '100px', left: '300px'},
+        slot: () => <div>step1</div>
       },
-    ],
-  };
-
-  componentDidMount() {
-    // window.location.href = "skype:10086?call"
+      {
+        id: '2',
+        title: '全新的自定义菜单导航2',
+        content: '产品菜单及云环境的选择从顶部移至左侧，鼠标点击按钮可展开列表2。',
+        img: '111',
+        position: {top: '200px', left: '400px'},
+        slot: () => <div>step2</div>
+      },
+      {
+        id: '3',
+        title: '全新的自定义菜单导航3',
+        content: '产品菜单及云环境的选择从顶部移至左侧，鼠标点击按钮可展开列表3。',
+        img: '111',
+        position: {top: '100px', left: '500px'},
+        slot: () => <div>step3</div>
+      },
+      {
+        id: '4',
+        title: '全新的自定义菜单导航4',
+        content: '产品菜单及云环境的选择从顶部移至左侧，鼠标点击按钮可展开列表4。',
+        img: '111',
+        position: {top: '200px', left: '600px'},
+        slot: () => <div>step4</div>
+      },
+      {
+        id: '5',
+        title: '全新的自定义菜单导航5',
+        content: '产品菜单及云环境的选择从顶部移至左侧，鼠标点击按钮可展开列表5。',
+        img: '111',
+        position: {top: '100px', left: '700px'},
+        slot: () => <div>step5</div>
+      }
+    ]
   }
 
-  handleLaunchCilck = id => {
-    const { tree } = this.state;
-    const data = this.changeSwitch(tree, id);
-    this.setState({ tree: data });
-  };
+  onClick = (type) => {
+    const { activeKey, stepData } = this.state
+    let now
+    let active 
+    stepData.some((item, index) => {
+        if (item.id === activeKey) {
+            now = active = index
+            return true
+        } else {
+            return false
+        }
+    })
 
-  changeSwitch = (source, id) => {
-    const data = source.map(item => {
-      if (item.id === id) {
-        item.open = !item.open;
-      }
-      if (item.children && item.children.length) {
-        this.changeSwitch(item.children, id);
-      }
-      return item;
-    });
+    if (type === STEP_TYPE.PREV) {
+        stepData[now - 1] && (active = now - 1)
+    } else {
+        stepData[now + 1] && (active = now + 1)
+    }
 
-    return data;
-  };
+    this.setState({
+        activeKey: stepData[active].id
+    })
 
-  renderTree = (data, left = 16) => {
-    let tree = data.map(item => {
-      return (
-        <li>
-          <div style={{ padding: '10px 20px 10px 0', borderBottom: '1px solid #ddd' }}>
-            <a
-              style={{ paddingLeft: left, paddingRight: 6 }}
-              onClick={() => {
-                this.handleLaunchCilck(item.id);
-              }}
-            >
-              {item.children ? (item.open ? '-' : '+') : '·'}
-            </a>
-            <a
-              style={{ color: 'black' }}
-              onClick={() => {
-                this.handleItemClick(item.id);
-              }}
-            >
-              {item.name}
-            </a>
-            <a style={{ float: 'right' }}>···</a>
-          </div>
-          <div
-            style={{
-              maxHeight: item.open ? '100vh' : 0,
-              overflow: 'hidden',
-              transition: 'all .3s ease',
-            }}
-          >
-            {item.children ? this.renderTree(item.children, left + 16) : null}
-          </div>
-        </li>
-      );
-    });
+  }
 
-    return <ul style={{ margin: 0, padding: 0 }}>{tree}</ul>;
-  };
+  onStepClick = (item) => {
+    if (item.id == this.state.activeKey) {
+        return
+    }
+    this.setState({
+        activeKey: item.id
+    })
+  }
 
+  renderStep = () => {
+    const { stepData, activeKey } = this.state
+    const data = stepData.filter(item => item.id === activeKey)[0]
+    return (
+        <div className={styles.container}>
+            <div className={styles.stepContainer} style={{position: 'absolute', ...data.position, transition: 'all .5s'}}>
+                <div className={styles.slotContainer}>
+                    {data.slot()}
+                </div>
+                <div className={styles.popperContainer}>
+                    <div className={styles.popperClose}>x</div>
+                    <div className={styles.popperImg}>图片</div>
+                    <div className={styles.popperContent}>
+                        <h2>{data.title}</h2>
+                        <div>{data.content}</div>
+                        <div className={styles.popperStepContainer}>
+                            <div className={styles.popperSteps}>
+                                {
+                                    this.state.stepData.map(item => {
+                                        return <span onClick={() => this.onStepClick(item)} className={item.id === activeKey ? styles.active : null} />
+                                    })
+                                }
+                            </div>
+                            <div className={styles.popperButtonList}>
+                                <Button type="primary" onClick={() => this.onClick(STEP_TYPE.PREV)} disabled={activeKey === stepData[0].id}>上一步</Button>
+                                <Button type="primary" onClick={() => this.onClick(STEP_TYPE.NEXT)} disabled={activeKey === stepData[stepData.length - 1].id}>下一步</Button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    )
+  }
   render() {
     const content = (
       <Row>
@@ -147,8 +135,9 @@ class Support extends PureComponent {
     return (
       <PageHeaderWrapper content={content}>
         <Row style={{ marginTop: '10px' }}>
-          <Col span={4}>{this.renderTree(this.state.tree)}</Col>
-          <Col span={20} style={{ background: '#fff', height: '100vh' }} />
+          <Col span={24}>
+            {this.renderStep()}
+          </Col>
         </Row>
       </PageHeaderWrapper>
     );
