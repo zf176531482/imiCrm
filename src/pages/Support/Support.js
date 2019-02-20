@@ -7,6 +7,11 @@ const STEP_TYPE = {
     PREV: 0,
     NEXT: 1
 }
+
+const POPPER_TYPE = {
+  'left-top': 'left-top',
+  'top-left': 'top-left',
+}
 class Support extends PureComponent {
   state = {
     activeKey: '1',
@@ -97,7 +102,8 @@ class Support extends PureComponent {
                 <div className={styles.slotContainer}>
                     {data.slot()}
                 </div>
-                <div className={styles.popperContainer}>
+                <div className={`${styles.popperContainer} ${styles.poperTopRight}`}>
+                    <div className={`${styles.arrow} ${styles.arrowTopRight}`}></div>
                     <div className={styles.popperClose}>x</div>
                     <div className={styles.popperImg}>图片</div>
                     <div className={styles.popperContent}>

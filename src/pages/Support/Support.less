@@ -12,10 +12,13 @@
 .stepContainer {
     background: yellow;
 }
+
 .popperContainer {
     position: absolute;
     top: 0;
+    left: auto;
     right: 0;
+    bottom: auto;
     transform: translate(110%, -20%);
     background: #fff;
     border-radius: 8px;
@@ -25,6 +28,13 @@
     width: 400px;
 }
 
+.poperTopRight {
+    top: 100%;
+    left: 0;
+    right: auto;
+    bottom: auto;
+    transform: translate(-20%, 20%);
+}
 .popperImg {
     width: 50px;
     background: red;
@@ -33,6 +43,28 @@
 
 .popperContent {
     flex: 1;
+}
+
+.arrow {
+    width:0;
+    height:0;
+    border-width:10px 10px 10px 0;
+    border-style:solid;
+    border-color:transparent #fff transparent transparent;/*透明 灰 透明 透明 */
+    position: absolute;
+    top: 20%;
+    left: -10px;
+}
+
+.arrowTopRight {
+    width:0;
+    height:0;
+    border-width:0 10px 10px 10px;
+    border-style:solid;
+    border-color:transparent transparent #fff;/*透明 透明  灰*/
+    position: absolute;
+    top: -10px;
+    left: 20%;
 }
 
 .popperClose {
