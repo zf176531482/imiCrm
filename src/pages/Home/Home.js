@@ -18,8 +18,8 @@ class Home extends Component {
 
   handleClick = link => {
     if (link == '/support') {
-      // window.location.href = `sip:`;
-      router.push(link);
+      window.location.href = `sip:`;
+      // router.push(link);
     } else {
       router.push(link);
     }
